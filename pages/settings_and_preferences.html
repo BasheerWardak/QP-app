@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings and Preferences - Super Scheduler</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Header Navigation -->
+    <header class="bg-surface border-b border-slate-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                        </svg>
+                        <h1 class="text-xl font-semibold text-text-primary">Super Scheduler</h1>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-calendar-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Event
+                    </a>
+                    <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-tasks mr-2"></i>Tasks
+                    </a>
+                    <a href="search_and_filter.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </a>
+                    <a href="settings_and_preferences.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-md text-text-secondary hover:text-primary hover:bg-slate-50" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 py-4">
+                <div class="flex flex-col space-y-2">
+                    <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-calendar-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Event
+                    </a>
+                    <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-tasks mr-2"></i>Tasks
+                    </a>
+                    <a href="search_and_filter.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </a>
+                    <a href="settings_and_preferences.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-semibold text-text-primary mb-2">Settings & Preferences</h2>
+            <p class="text-text-secondary">Customize your calendar experience and manage your preferences</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Settings Navigation Sidebar -->
+            <aside class="lg:w-80 order-2 lg:order-1">
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4">Settings Menu</h3>
+                    <nav class="space-y-2">
+                        <button onclick="showSection('display')" class="settings-nav-btn active w-full text-left px-3 py-2 rounded-md transition-colors">
+                            <i class="fas fa-desktop mr-3"></i>Display Settings
+                        </button>
+                        <button onclick="showSection('notifications')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
+                            <i class="fas fa-bell mr-3"></i>Notifications
+                        </button>
+                        <button onclick="showSection('accessibility')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
+                            <i class="fas fa-universal-access mr-3"></i>Accessibility
+                        </button>
+                        <button onclick="showSection('categories')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
+                            <i class="fas fa-tags mr-3"></i>Categories
+                        </button>
+                        <button onclick="showSection('data')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
+                            <i class="fas fa-database mr-3"></i>Data Management
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card p-6 mt-6">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
+                        <i class="fas fa-bolt text-accent mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-3">
+                        <button onclick="resetToDefaults()" class="w-full btn-secondary text-sm">
+                            <i class="fas fa-undo mr-2"></i>Reset to Defaults
+                        </button>
+                        <button onclick="exportSettings()" class="w-full btn-secondary text-sm">
+                            <i class="fas fa-download mr-2"></i>Export Settings
+                        </button>
+                        <button onclick="importSettings()" class="w-full btn-secondary text-sm">
+                            <i class="fas fa-upload mr-2"></i>Import Settings
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Settings Content -->
+            <main class="flex-1 order-1 lg:order-2">
+                <!-- Display Settings Section -->
+                <div id="displaySection" class="settings-section">
+                    <div class="card p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                            <i class="fas fa-desktop text-primary mr-3"></i>
+                            Display Settings
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Time Format -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-primary mb-3">Time Format</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="radio" name="timeFormat" value="12" checked class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">12-hour (2:30 PM)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="radio" name="timeFormat" value="24" class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">24-hour (14:30)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Week Start Day -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-primary mb-3">Week Starts On</label>
+                                <select class="form-input">
+                                    <option value="sunday" selected>Sunday</option>
+                                    <option value="monday">Monday</option>
+                                    <option value="saturday">Saturday</option>
+                                </select>
+                            </div>
+
+                            <!-- Date Format -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-primary mb-3">Date Format</label>
+                                <select class="form-input">
+                                    <option value="mm/dd/yyyy" selected>MM/DD/YYYY</option>
+                                    <option value="dd/mm/yyyy">DD/MM/YYYY</option>
+                                    <option value="yyyy-mm-dd">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+
+                            <!-- Default View -->
+                            <div>
+                                <label class="block text-sm font-medium text-text-primary mb-3">Default Calendar View</label>
+                                <select class="form-input">
+                                    <option value="month" selected>Month View</option>
+                                    <option value="week">Week View</option>
+                                    <option value="day">Day View</option>
+                                    <option value="agenda">Agenda View</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Theme Selection -->
+                        <div class="mt-8">
+                            <h4 class="text-lg font-medium text-text-primary mb-4">Theme Selection</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div class="theme-option active" onclick="selectTheme('light')">
+                                    <div class="w-full h-20 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg mb-3 border-2 border-primary"></div>
+                                    <div class="text-center">
+                                        <p class="text-sm font-medium text-text-primary">Light Theme</p>
+                                        <p class="text-xs text-text-secondary">Default bright theme</p>
+                                    </div>
+                                </div>
+                                <div class="theme-option" onclick="selectTheme('dark')">
+                                    <div class="w-full h-20 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg mb-3 border-2 border-transparent"></div>
+                                    <div class="text-center">
+                                        <p class="text-sm font-medium text-text-primary">Dark Theme</p>
+                                        <p class="text-xs text-text-secondary">Easy on the eyes</p>
+                                    </div>
+                                </div>
+                                <div class="theme-option" onclick="selectTheme('auto')">
+                                    <div class="w-full h-20 bg-gradient-to-br from-blue-100 via-slate-200 to-slate-800 rounded-lg mb-3 border-2 border-transparent"></div>
+                                    <div class="text-center">
+                                        <p class="text-sm font-medium text-text-primary">Auto Theme</p>
+                                        <p class="text-xs text-text-secondary">Follows system</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calendar Preview -->
+                        <div class="mt-8">
+                            <h4 class="text-lg font-medium text-text-primary mb-4">Preview</h4>
+                            <div class="bg-slate-50 rounded-lg p-4 border">
+                                <div class="mini-calendar">
+                                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium text-text-secondary mb-2">
+                                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                                    </div>
+                                    <div class="grid grid-cols-7 gap-1 text-center text-sm">
+                                        <div class="p-2 text-text-secondary">29</div>
+                                        <div class="p-2 text-text-primary">30</div>
+                                        <div class="p-2 text-text-primary bg-primary text-white rounded">1</div>
+                                        <div class="p-2 text-text-primary">2</div>
+                                        <div class="p-2 text-text-primary">3</div>
+                                        <div class="p-2 text-text-primary">4</div>
+                                        <div class="p-2 text-text-primary">5</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Section -->
+                <div id="notificationsSection" class="settings-section hidden">
+                    <div class="card p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                            <i class="fas fa-bell text-primary mr-3"></i>
+                            Notification Preferences
+                        </h3>
+
+                        <div class="space-y-6">
+                            <!-- Browser Notifications -->
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div>
+                                    <h4 class="text-sm font-medium text-text-primary">Browser Notifications</h4>
+                                    <p class="text-xs text-text-secondary">Allow desktop notifications for reminders</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+
+                            <!-- Default Reminder Times -->
+                            <div>
+                                <h4 class="text-sm font-medium text-text-primary mb-3">Default Reminder Times</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-medium text-text-secondary mb-2">Events</label>
+                                        <select class="form-input text-sm">
+                                            <option value="none">No reminder</option>
+                                            <option value="5">5 minutes before</option>
+                                            <option value="15" selected>15 minutes before</option>
+                                            <option value="30">30 minutes before</option>
+                                            <option value="60">1 hour before</option>
+                                            <option value="1440">1 day before</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-text-secondary mb-2">Tasks</label>
+                                        <select class="form-input text-sm">
+                                            <option value="none">No reminder</option>
+                                            <option value="5">5 minutes before</option>
+                                            <option value="15">15 minutes before</option>
+                                            <option value="30" selected>30 minutes before</option>
+                                            <option value="60">1 hour before</option>
+                                            <option value="1440">1 day before</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sound Options -->
+                            <div>
+                                <h4 class="text-sm font-medium text-text-primary mb-3">Sound Options</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" checked class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">Play notification sound</span>
+                                    </label>
+                                    <div class="ml-7">
+                                        <select class="form-input text-sm w-48">
+                                            <option value="default" selected>Default</option>
+                                            <option value="chime">Chime</option>
+                                            <option value="bell">Bell</option>
+                                            <option value="ding">Ding</option>
+                                        </select>
+                                        <button class="ml-2 px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded transition-colors">
+                                            <i class="fas fa-play mr-1"></i>Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Email Notifications -->
+                            <div>
+                                <h4 class="text-sm font-medium text-text-primary mb-3">Email Notifications</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">Daily agenda summary</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">Weekly schedule overview</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">Task deadline reminders</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accessibility Section -->
+                <div id="accessibilitySection" class="settings-section hidden">
+                    <div class="card p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                            <i class="fas fa-universal-access text-primary mr-3"></i>
+                            Accessibility Options
+                        </h3>
+
+                        <div class="space-y-6">
+                            <!-- High Contrast -->
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div>
+                                    <h4 class="text-sm font-medium text-text-primary">High Contrast Mode</h4>
+                                    <p class="text-xs text-text-secondary">Increase contrast for better visibility</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+
+                            <!-- Screen Reader -->
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div>
+                                    <h4 class="text-sm font-medium text-text-primary">Screen Reader Enhancements</h4>
+                                    <p class="text-xs text-text-secondary">Improved labels and descriptions</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+
+                            <!-- Keyboard Navigation -->
+                            <div>
+                                <h4 class="text-sm font-medium text-text-primary mb-3">Keyboard Navigation</h4>
+                                <div class="space-y-3">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" checked class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">Enable keyboard shortcuts</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" checked class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">Show focus indicators</span>
+                                    </label>
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" class="w-4 h-4 text-primary" />
+                                        <span class="text-sm text-text-primary">Skip to main content link</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Font Size -->
+                            <div>
+                                <h4 class="text-sm font-medium text-text-primary mb-3">Font Size</h4>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-sm text-text-secondary">Small</span>
+                                    <input type="range" min="12" max="20" value="16" class="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" />
+                                    <span class="text-sm text-text-secondary">Large</span>
+                                </div>
+                                <p class="text-xs text-text-secondary mt-2">Current size: 16px</p>
+                            </div>
+
+                            <!-- Reduced Motion -->
+                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div>
+                                    <h4 class="text-sm font-medium text-text-primary">Reduce Motion</h4>
+                                    <p class="text-xs text-text-secondary">Minimize animations and transitions</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Section -->
+                <div id="categoriesSection" class="settings-section hidden">
+                    <div class="card p-6 mb-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-semibold text-text-primary flex items-center">
+                                <i class="fas fa-tags text-primary mr-3"></i>
+                                Event Categories
+                            </h3>
+                            <button onclick="addCategory()" class="btn-primary text-sm">
+                                <i class="fas fa-plus mr-2"></i>Add Category
+                            </button>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Existing Categories -->
+                            <div class="category-item flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+                                    <span class="text-sm font-medium text-text-primary">Work</span>
+                                    <span class="text-xs text-text-secondary bg-slate-200 px-2 py-1 rounded">12 events</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editCategory('work')" class="p-2 text-text-secondary hover:text-primary transition-colors">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </button>
+                                    <button onclick="deleteCategory('work')" class="p-2 text-text-secondary hover:text-error transition-colors">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="category-item flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                                    <span class="text-sm font-medium text-text-primary">Personal</span>
+                                    <span class="text-xs text-text-secondary bg-slate-200 px-2 py-1 rounded">8 events</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editCategory('personal')" class="p-2 text-text-secondary hover:text-primary transition-colors">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </button>
+                                    <button onclick="deleteCategory('personal')" class="p-2 text-text-secondary hover:text-error transition-colors">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="category-item flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-4 h-4 bg-red-500 rounded-full"></div>
+                                    <span class="text-sm font-medium text-text-primary">Health</span>
+                                    <span class="text-xs text-text-secondary bg-slate-200 px-2 py-1 rounded">3 events</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editCategory('health')" class="p-2 text-text-secondary hover:text-primary transition-colors">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </button>
+                                    <button onclick="deleteCategory('health')" class="p-2 text-text-secondary hover:text-error transition-colors">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="category-item flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-4 h-4 bg-purple-500 rounded-full"></div>
+                                    <span class="text-sm font-medium text-text-primary">Social</span>
+                                    <span class="text-xs text-text-secondary bg-slate-200 px-2 py-1 rounded">5 events</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="editCategory('social')" class="p-2 text-text-secondary hover:text-primary transition-colors">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </button>
+                                    <button onclick="deleteCategory('social')" class="p-2 text-text-secondary hover:text-error transition-colors">
+                                        <i class="fas fa-trash text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Color Palette -->
+                        <div class="mt-6">
+                            <h4 class="text-sm font-medium text-text-primary mb-3">Available Colors</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <div class="w-8 h-8 bg-blue-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                                <div class="w-8 h-8 bg-green-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                                <div class="w-8 h-8 bg-red-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                                <div class="w-8 h-8 bg-purple-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                                <div class="w-8 h-8 bg-yellow-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                                <div class="w-8 h-8 bg-pink-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                                <div class="w-8 h-8 bg-indigo-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                                <div class="w-8 h-8 bg-teal-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Management Section -->
+                <div id="dataSection" class="settings-section hidden">
+                    <div class="card p-6 mb-6">
+                        <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                            <i class="fas fa-database text-primary mr-3"></i>
+                            Data Management
+                        </h3>
+
+                        <div class="space-y-6">
+                            <!-- Export Data -->
+                            <div class="p-4 bg-slate-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-text-primary mb-2">Export Calendar Data</h4>
+                                <p class="text-xs text-text-secondary mb-4">Download your calendar data as a backup file</p>
+                                <div class="flex flex-wrap gap-3">
+                                    <button onclick="exportData('json')" class="btn-secondary text-sm">
+                                        <i class="fas fa-file-code mr-2"></i>Export as JSON
+                                    </button>
+                                    <button onclick="exportData('csv')" class="btn-secondary text-sm">
+                                        <i class="fas fa-file-csv mr-2"></i>Export as CSV
+                                    </button>
+                                    <button onclick="exportData('ical')" class="btn-secondary text-sm">
+                                        <i class="fas fa-calendar mr-2"></i>Export as iCal
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Import Data -->
+                            <div class="p-4 bg-slate-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-text-primary mb-2">Import Calendar Data</h4>
+                                <p class="text-xs text-text-secondary mb-4">Import events from a backup file or other calendar applications</p>
+                                <div class="space-y-3">
+                                    <div class="flex items-center space-x-3">
+                                        <input type="file" id="importFile" accept=".json,.csv,.ics" class="hidden" />
+                                        <button onclick="document.getElementById('importFile').click()" class="btn-secondary text-sm">
+                                            <i class="fas fa-upload mr-2"></i>Choose File
+                                        </button>
+                                        <span id="fileName" class="text-xs text-text-secondary">No file selected</span>
+                                    </div>
+                                    <button onclick="importData()" class="btn-primary text-sm" disabled>
+                                        <i class="fas fa-download mr-2"></i>Import Data
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Storage Info -->
+                            <div class="p-4 bg-slate-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-text-primary mb-2">Storage Information</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-text-secondary">Events:</span>
+                                        <span class="text-text-primary">28 items</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-text-secondary">Tasks:</span>
+                                        <span class="text-text-primary">15 items</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-text-secondary">Categories:</span>
+                                        <span class="text-text-primary">4 items</span>
+                                    </div>
+                                    <div class="flex justify-between text-xs font-medium">
+                                        <span class="text-text-secondary">Storage Used:</span>
+                                        <span class="text-text-primary">2.3 MB</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Clear Data -->
+                            <div class="p-4 bg-error-100 border border-error-200 rounded-lg">
+                                <h4 class="text-sm font-medium text-error-600 mb-2">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                                    Danger Zone
+                                </h4>
+                                <p class="text-xs text-error-600 mb-4">These actions cannot be undone. Please be careful.</p>
+                                <div class="space-y-2">
+                                    <button onclick="clearAllData()" class="px-4 py-2 bg-error text-white text-sm rounded-md hover:bg-error-600 transition-colors">
+                                        <i class="fas fa-trash mr-2"></i>Clear All Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Save/Reset Actions -->
+                <div class="card p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div class="text-sm text-text-secondary">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Changes are saved automatically
+                        </div>
+                        <div class="flex space-x-3">
+                            <button onclick="resetSection()" class="btn-secondary">
+                                <i class="fas fa-undo mr-2"></i>Reset Section
+                            </button>
+                            <button onclick="saveSettings()" class="btn-primary">
+                                <i class="fas fa-save mr-2"></i>Save All Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="flex items-center space-x-3">
+            <div class="flex-shrink-0">
+                <i id="toastIcon" class="fas fa-check-circle text-success"></i>
+            </div>
+            <div>
+                <p id="toastMessage" class="text-sm font-medium text-text-primary">Settings saved successfully!</p>
+            </div>
+            <button onclick="hideToast()" class="ml-auto text-text-secondary hover:text-text-primary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    <div id="categoryModal" class="modal-overlay hidden" onclick="closeCategoryModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-text-primary">Add Category</h3>
+                <button onclick="closeCategoryModal()" class="text-text-secondary hover:text-text-primary">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4" onsubmit="saveCategoryModal(event)">
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Category Name</label>
+                    <input type="text" id="categoryName" class="form-input" placeholder="Enter category name" required />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Color</label>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <input type="radio" name="categoryColor" value="blue" id="color-blue" class="hidden" />
+                        <label for="color-blue" class="w-8 h-8 bg-blue-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
+                        
+                        <input type="radio" name="categoryColor" value="green" id="color-green" class="hidden" />
+                        <label for="color-green" class="w-8 h-8 bg-green-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
+                        
+                        <input type="radio" name="categoryColor" value="red" id="color-red" class="hidden" />
+                        <label for="color-red" class="w-8 h-8 bg-red-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
+                        
+                        <input type="radio" name="categoryColor" value="purple" id="color-purple" class="hidden" />
+                        <label for="color-purple" class="w-8 h-8 bg-purple-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
+                        
+                        <input type="radio" name="categoryColor" value="yellow" id="color-yellow" class="hidden" />
+                        <label for="color-yellow" class="w-8 h-8 bg-yellow-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
+                        
+                        <input type="radio" name="categoryColor" value="pink" id="color-pink" class="hidden" />
+                        <label for="color-pink" class="w-8 h-8 bg-pink-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closeCategoryModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal-overlay hidden" onclick="closeConfirmModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-text-primary">Confirm Action</h3>
+                <button onclick="closeConfirmModal()" class="text-text-secondary hover:text-text-primary">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mb-6">
+                <p id="confirmMessage" class="text-text-secondary">Are you sure you want to proceed?</p>
+            </div>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeConfirmModal()" class="btn-secondary">Cancel</button>
+                <button id="confirmAction" onclick="executeConfirmAction()" class="px-4 py-2 bg-error text-white rounded-md hover:bg-error-600 transition-colors">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 'display';
+        let pendingAction = null;
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Section navigation
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.settings-section').forEach(sec => {
+                sec.classList.add('hidden');
+            });
+            
+            // Show selected section
+            document.getElementById(section + 'Section').classList.remove('hidden');
+            
+            // Update navigation
+            document.querySelectorAll('.settings-nav-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-primary', 'text-white');
+                btn.classList.add('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
+            });
+            
+            event.target.classList.add('active', 'bg-primary', 'text-white');
+            event.target.classList.remove('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
+            
+            currentSection = section;
+        }
+
+        // Theme selection
+        function selectTheme(theme) {
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.remove('active');
+                option.querySelector('div').classList.remove('border-primary');
+                option.querySelector('div').classList.add('border-transparent');
+            });
+            
+            event.currentTarget.classList.add('active');
+            event.currentTarget.querySelector('div').classList.add('border-primary');
+            event.currentTarget.querySelector('div').classList.remove('border-transparent');
+            
+            showToast(`${theme.charAt(0).toUpperCase() + theme.slice(1)} theme selected`, 'success');
+        }
+
+        // Category management
+        function addCategory() {
+            document.getElementById('categoryModal').classList.remove('hidden');
+            document.getElementById('categoryName').value = '';
+            document.querySelectorAll('input[name="categoryColor"]').forEach(input => {
+                input.checked = false;
+            });
+            setTimeout(() => {
+                document.querySelector('.modal-content').classList.add('show');
+            }, 10);
+        }
+
+        function editCategory(categoryId) {
+            showToast('Edit category functionality', 'info');
+        }
+
+        function deleteCategory(categoryId) {
+            showConfirmation(
+                'Are you sure you want to delete this category? All events in this category will be moved to "Uncategorized".',
+                () => {
+                    showToast('Category deleted successfully', 'success');
+                }
+            );
+        }
+
+        function closeCategoryModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            document.querySelector('.modal-content').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('categoryModal').classList.add('hidden');
+            }, 300);
+        }
+
+        function saveCategoryModal(event) {
+            event.preventDefault();
+            const name = document.getElementById('categoryName').value;
+            const color = document.querySelector('input[name="categoryColor"]:checked');
+            
+            if (!color) {
+                showToast('Please select a color', 'error');
+                return;
+            }
+            
+            showToast(`Category "${name}" created successfully`, 'success');
+            closeCategoryModal();
+        }
+
+        // Data management
+        function exportData(format) {
+            showToast(`Exporting data as ${format.toUpperCase()}...`, 'info');
+            // Simulate export
+            setTimeout(() => {
+                showToast(`Data exported successfully as ${format.toUpperCase()}`, 'success');
+            }, 1500);
+        }
+
+        function importData() {
+            const fileInput = document.getElementById('importFile');
+            if (!fileInput.files[0]) {
+                showToast('Please select a file to import', 'error');
+                return;
+            }
+            
+            showToast('Importing data...', 'info');
+            setTimeout(() => {
+                showToast('Data imported successfully', 'success');
+            }, 2000);
+        }
+
+        function clearAllData() {
+            showConfirmation(
+                'This will permanently delete all your calendar data including events, tasks, and categories. This action cannot be undone.',
+                () => {
+                    showToast('All data cleared successfully', 'success');
+                }
+            );
+        }
+
+        // Quick actions
+        function resetToDefaults() {
+            showConfirmation(
+                'This will reset all settings to their default values. Your data will not be affected.',
+                () => {
+                    showToast('Settings reset to defaults', 'success');
+                }
+            );
+        }
+
+        function exportSettings() {
+            showToast('Settings exported successfully', 'success');
+        }
+
+        function importSettings() {
+            showToast('Import settings functionality', 'info');
+        }
+
+        // Save and reset
+        function saveSettings() {
+            showToast('All settings saved successfully!', 'success');
+        }
+
+        function resetSection() {
+            showConfirmation(
+                `Reset all ${currentSection} settings to default values?`,
+                () => {
+                    showToast(`${currentSection.charAt(0).toUpperCase() + currentSection.slice(1)} settings reset`, 'success');
+                }
+            );
+        }
+
+        // Confirmation modal
+        function showConfirmation(message, action) {
+            document.getElementById('confirmMessage').textContent = message;
+            pendingAction = action;
+            document.getElementById('confirmModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.querySelector('#confirmModal .modal-content').classList.add('show');
+            }, 10);
+        }
+
+        function closeConfirmModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            document.querySelector('#confirmModal .modal-content').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('confirmModal').classList.add('hidden');
+                pendingAction = null;
+            }, 300);
+        }
+
+        function executeConfirmAction() {
+            if (pendingAction) {
+                pendingAction();
+            }
+            closeConfirmModal();
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+            
+            messageEl.textContent = message;
+            
+            // Set icon based on type
+            icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
+                           type === 'error' ? 'fas fa-exclamation-circle text-error' :
+                           'fas fa-info-circle text-accent';
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                hideToast();
+            }, 3000);
+        }
+
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
+        // File input handling
+        document.getElementById('importFile').addEventListener('change', function(event) {
+            const fileName = event.target.files[0]?.name || 'No file selected';
+            document.getElementById('fileName').textContent = fileName;
+            
+            const importBtn = document.querySelector('button[onclick="importData()"]');
+            if (event.target.files[0]) {
+                importBtn.disabled = false;
+                importBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                importBtn.disabled = true;
+                importBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        });
+
+        // Initialize settings page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial active navigation
+            const displayBtn = document.querySelector('.settings-nav-btn');
+            displayBtn.classList.add('active', 'bg-primary', 'text-white');
+            displayBtn.classList.remove('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
+            
+            // Add color selection listeners
+            document.querySelectorAll('input[name="categoryColor"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    document.querySelectorAll('label[for^="color-"]').forEach(label => {
+                        label.classList.remove('ring-2', 'ring-primary', 'ring-offset-2');
+                    });
+                    
+                    if (this.checked) {
+                        document.querySelector(`label[for="${this.id}"]`).classList.add('ring-2', 'ring-primary', 'ring-offset-2');
+                    }
+                });
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch(event.key) {
+                    case 's':
+                        event.preventDefault();
+                        saveSettings();
+                        break;
+                    case 'r':
+                        event.preventDefault();
+                        resetSection();
+                        break;
+                }
+            }
+            
+            // Escape key to close modals
+            if (event.key === 'Escape') {
+                closeCategoryModal();
+                closeConfirmModal();
+            }
+        });
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Management - Super Scheduler</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Header Navigation -->
+    <header class="bg-surface border-b border-slate-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                        </svg>
+                        <h1 class="text-xl font-semibold text-text-primary">Super Scheduler</h1>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-calendar-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Event
+                    </a>
+                    <a href="task_management.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
+                        <i class="fas fa-tasks mr-2"></i>Tasks
+                    </a>
+                    <a href="search_and_filter.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </a>
+                    <a href="settings_and_preferences.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-md text-text-secondary hover:text-primary hover:bg-slate-50" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 py-4">
+                <div class="flex flex-col space-y-2">
+                    <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-calendar-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Event
+                    </a>
+                    <a href="task_management.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
+                        <i class="fas fa-tasks mr-2"></i>Tasks
+                    </a>
+                    <a href="search_and_filter.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </a>
+                    <a href="settings_and_preferences.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Page Header -->
+        <div class="mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-3xl font-semibold text-text-primary">Task Management</h2>
+                    <p class="text-text-secondary mt-1">Organize and track your tasks efficiently</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleBulkMode()" id="bulkModeBtn" class="btn-secondary">
+                        <i class="fas fa-check-square mr-2"></i>Bulk Actions
+                    </button>
+                    <a href="calendar_dashboard.html" class="btn-secondary">
+                        <i class="fas fa-calendar mr-2"></i>View Calendar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Creation Panel -->
+        <div class="card p-6 mb-6">
+            <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
+                <i class="fas fa-plus-circle text-primary mr-2"></i>
+                Create New Task
+            </h3>
+            <form class="space-y-4" onsubmit="createTask(event)">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="md:col-span-2">
+                        <input type="text" id="taskTitle" placeholder="Task title" class="form-input" required />
+                    </div>
+                    <div>
+                        <input type="date" id="taskDueDate" class="form-input" required />
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <select id="taskCategory" class="form-input">
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="health">Health</option>
+                            <option value="social">Social</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="taskPriority" class="form-input">
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn-primary w-full">
+                            <i class="fas fa-plus mr-2"></i>Add Task
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filters and Controls -->
+        <div class="card p-4 mb-6">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <!-- Filter Controls -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-filter text-secondary"></i>
+                        <span class="text-sm font-medium text-text-primary">Filters:</span>
+                    </div>
+                    <select id="statusFilter" class="form-input text-sm w-auto" onchange="filterTasks()">
+                        <option value="all">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="completed">Completed</option>
+                        <option value="overdue">Overdue</option>
+                    </select>
+                    <select id="categoryFilter" class="form-input text-sm w-auto" onchange="filterTasks()">
+                        <option value="all">All Categories</option>
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="health">Health</option>
+                        <option value="social">Social</option>
+                    </select>
+                    <select id="priorityFilter" class="form-input text-sm w-auto" onchange="filterTasks()">
+                        <option value="all">All Priorities</option>
+                        <option value="high">High Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="low">Low Priority</option>
+                    </select>
+                </div>
+
+                <!-- Sort Controls -->
+                <div class="flex items-center space-x-3">
+                    <span class="text-sm font-medium text-text-primary">Sort by:</span>
+                    <select id="sortBy" class="form-input text-sm w-auto" onchange="sortTasks()">
+                        <option value="dueDate">Due Date</option>
+                        <option value="priority">Priority</option>
+                        <option value="category">Category</option>
+                        <option value="title">Title</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Operations Toolbar (Hidden by default) -->
+        <div id="bulkToolbar" class="card p-4 mb-6 hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <span id="selectedCount" class="text-sm font-medium text-text-primary">0 tasks selected</span>
+                    <button onclick="selectAllTasks()" class="text-sm text-primary hover:text-primary-700">Select All</button>
+                    <button onclick="deselectAllTasks()" class="text-sm text-text-secondary hover:text-text-primary">Deselect All</button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="bulkMarkComplete()" class="btn-secondary text-sm">
+                        <i class="fas fa-check mr-2"></i>Mark Complete
+                    </button>
+                    <select id="bulkCategory" class="form-input text-sm w-auto">
+                        <option value>Change Category</option>
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="health">Health</option>
+                        <option value="social">Social</option>
+                    </select>
+                    <button onclick="bulkDelete()" class="px-3 py-2 text-error hover:bg-error-100 rounded-md transition-colors text-sm">
+                        <i class="fas fa-trash mr-2"></i>Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="card p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-text-secondary">Total Tasks</p>
+                        <p id="totalTasks" class="text-2xl font-semibold text-text-primary">12</p>
+                    </div>
+                    <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-tasks text-primary"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-text-secondary">Pending</p>
+                        <p id="pendingTasks" class="text-2xl font-semibold text-warning">8</p>
+                    </div>
+                    <div class="w-10 h-10 bg-warning-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-clock text-warning"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-text-secondary">Completed</p>
+                        <p id="completedTasks" class="text-2xl font-semibold text-success">3</p>
+                    </div>
+                    <div class="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check-circle text-success"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-text-secondary">Overdue</p>
+                        <p id="overdueTasks" class="text-2xl font-semibold text-error">1</p>
+                    </div>
+                    <div class="w-10 h-10 bg-error-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-exclamation-triangle text-error"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task List -->
+        <div class="card">
+            <div class="p-6 border-b border-slate-200">
+                <h3 class="text-lg font-semibold text-text-primary flex items-center">
+                    <i class="fas fa-list text-secondary mr-2"></i>
+                    Task List
+                </h3>
+            </div>
+            
+            <div id="taskList" class="divide-y divide-slate-200">
+                <!-- Task Item 1 - Overdue -->
+                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="1" data-status="overdue" data-category="work" data-priority="high" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
+                    <div class="flex items-center space-x-4">
+                        <div class="bulk-checkbox hidden">
+                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(1)" />
+                            <div class="w-3 h-3 bg-blue-500 rounded-full" title="Work category"></div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h4 class="text-base font-medium text-text-primary truncate">Project Presentation Prep</h4>
+                                <span class="px-2 py-1 text-xs font-medium bg-error-100 text-error-600 rounded-full">High Priority</span>
+                                <span class="px-2 py-1 text-xs font-medium bg-error-100 text-error-600 rounded-full">Overdue</span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <span class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-1"></i>
+                                    Due: Sep 28, 2025
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-briefcase mr-1"></i>
+                                    Work
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editTask(1)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteTask(1)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Item 2 - High Priority -->
+                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="2" data-status="pending" data-category="work" data-priority="high" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
+                    <div class="flex items-center space-x-4">
+                        <div class="bulk-checkbox hidden">
+                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(2)" />
+                            <div class="w-3 h-3 bg-blue-500 rounded-full" title="Work category"></div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h4 class="text-base font-medium text-text-primary truncate">Client Meeting Follow-up</h4>
+                                <span class="px-2 py-1 text-xs font-medium bg-error-100 text-error-600 rounded-full">High Priority</span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <span class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-1"></i>
+                                    Due: Oct 2, 2025
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-briefcase mr-1"></i>
+                                    Work
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editTask(2)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteTask(2)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Item 3 - Medium Priority -->
+                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="3" data-status="pending" data-category="personal" data-priority="medium" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
+                    <div class="flex items-center space-x-4">
+                        <div class="bulk-checkbox hidden">
+                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(3)" />
+                            <div class="w-3 h-3 bg-green-500 rounded-full" title="Personal category"></div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h4 class="text-base font-medium text-text-primary truncate">Grocery Shopping</h4>
+                                <span class="px-2 py-1 text-xs font-medium bg-warning-100 text-warning-600 rounded-full">Medium Priority</span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <span class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-1"></i>
+                                    Due: Oct 1, 2025
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-user mr-1"></i>
+                                    Personal
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editTask(3)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteTask(3)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Item 4 - Completed -->
+                <div class="task-item p-4 hover:bg-slate-50 transition-colors opacity-60" data-task-id="4" data-status="completed" data-category="health" data-priority="low" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
+                    <div class="flex items-center space-x-4">
+                        <div class="bulk-checkbox hidden">
+                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" checked class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(4)" />
+                            <div class="w-3 h-3 bg-red-500 rounded-full" title="Health category"></div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h4 class="text-base font-medium text-text-primary truncate line-through">Morning Workout</h4>
+                                <span class="px-2 py-1 text-xs font-medium bg-success-100 text-success-600 rounded-full">Completed</span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <span class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-1"></i>
+                                    Due: Sep 30, 2025
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-heart mr-1"></i>
+                                    Health
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editTask(4)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteTask(4)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Item 5 - Low Priority -->
+                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="5" data-status="pending" data-category="social" data-priority="low" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
+                    <div class="flex items-center space-x-4">
+                        <div class="bulk-checkbox hidden">
+                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(5)" />
+                            <div class="w-3 h-3 bg-purple-500 rounded-full" title="Social category"></div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <h4 class="text-base font-medium text-text-primary truncate">Plan Weekend Trip</h4>
+                                <span class="px-2 py-1 text-xs font-medium bg-secondary-100 text-secondary-600 rounded-full">Low Priority</span>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <span class="flex items-center">
+                                    <i class="fas fa-calendar-alt mr-1"></i>
+                                    Due: Oct 5, 2025
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-users mr-1"></i>
+                                    Social
+                                </span>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="editTask(5)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteTask(5)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
+                                <i class="fas fa-grip-vertical"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (Hidden by default) -->
+            <div id="emptyState" class="hidden p-12 text-center">
+                <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-tasks text-2xl text-slate-400"></i>
+                </div>
+                <h3 class="text-lg font-medium text-text-primary mb-2">No tasks found</h3>
+                <p class="text-text-secondary mb-4">Create your first task to get started with task management.</p>
+                <button onclick="focusTaskInput()" class="btn-primary">
+                    <i class="fas fa-plus mr-2"></i>Create Task
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="flex items-center space-x-3">
+            <div class="flex-shrink-0">
+                <i id="toastIcon" class="fas fa-check-circle text-success"></i>
+            </div>
+            <div>
+                <p id="toastMessage" class="text-sm font-medium text-text-primary">Task created successfully!</p>
+            </div>
+            <button onclick="hideToast()" class="ml-auto text-text-secondary hover:text-text-primary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Task Edit Modal -->
+    <div id="taskModal" class="modal-overlay hidden" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-text-primary">Edit Task</h3>
+                <button onclick="closeModal()" class="text-text-secondary hover:text-text-primary">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4" onsubmit="saveTask(event)">
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Title</label>
+                    <input type="text" id="editTaskTitle" class="form-input" value="Project Presentation Prep" required />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">Due Date</label>
+                        <input type="date" id="editTaskDate" class="form-input" value="2025-09-28" required />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">Priority</label>
+                        <select id="editTaskPriority" class="form-input">
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high" selected>High Priority</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Category</label>
+                    <select id="editTaskCategory" class="form-input">
+                        <option value="work" selected>Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="health">Health</option>
+                        <option value="social">Social</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Description</label>
+                    <textarea id="editTaskDescription" class="form-input" rows="3" placeholder="Task description..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="deleteTaskFromModal()" class="px-4 py-2 text-error hover:bg-error-100 rounded-md transition-colors">
+                        <i class="fas fa-trash mr-2"></i>Delete
+                    </button>
+                    <button type="button" onclick="closeModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Floating Action Button (Mobile) -->
+    <button id="fabButton" class="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-lg hover:bg-primary-700 transition-colors md:hidden" onclick="focusTaskInput()">
+        <i class="fas fa-plus text-xl"></i>
+    </button>
+
+    <script>
+        let bulkMode = false;
+        let selectedTasks = new Set();
+        let draggedTask = null;
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Task creation
+        function createTask(event) {
+            event.preventDefault();
+            const title = document.getElementById('taskTitle').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const category = document.getElementById('taskCategory').value;
+            const priority = document.getElementById('taskPriority').value;
+            
+            showToast('Task created successfully!', 'success');
+            event.target.reset();
+            updateTaskStats();
+        }
+
+        // Task completion toggle
+        function toggleTaskCompletion(taskId) {
+            const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
+            const checkbox = taskItem.querySelector('.completion-checkbox');
+            const title = taskItem.querySelector('h4');
+            
+            if (checkbox.checked) {
+                taskItem.classList.add('opacity-60');
+                title.classList.add('line-through');
+                taskItem.setAttribute('data-status', 'completed');
+                showToast('Task marked as completed!', 'success');
+            } else {
+                taskItem.classList.remove('opacity-60');
+                title.classList.remove('line-through');
+                taskItem.setAttribute('data-status', 'pending');
+                showToast('Task marked as pending', 'info');
+            }
+            updateTaskStats();
+        }
+
+        // Task editing
+        function editTask(taskId) {
+            document.getElementById('taskModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.querySelector('.modal-content').classList.add('show');
+            }, 10);
+        }
+
+        function saveTask(event) {
+            event.preventDefault();
+            showToast('Task updated successfully!', 'success');
+            closeModal();
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
+                taskItem.remove();
+                showToast('Task deleted successfully', 'success');
+                updateTaskStats();
+            }
+        }
+
+        function deleteTaskFromModal() {
+            if (confirm('Are you sure you want to delete this task?')) {
+                showToast('Task deleted successfully', 'success');
+                closeModal();
+                updateTaskStats();
+            }
+        }
+
+        // Modal management
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            document.querySelector('.modal-content').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('taskModal').classList.add('hidden');
+            }, 300);
+        }
+
+        // Bulk operations
+        function toggleBulkMode() {
+            bulkMode = !bulkMode;
+            const bulkBtn = document.getElementById('bulkModeBtn');
+            const bulkToolbar = document.getElementById('bulkToolbar');
+            const bulkCheckboxes = document.querySelectorAll('.bulk-checkbox');
+            
+            if (bulkMode) {
+                bulkBtn.textContent = 'Exit Bulk Mode';
+                bulkBtn.classList.add('bg-primary', 'text-white');
+                bulkBtn.classList.remove('btn-secondary');
+                bulkToolbar.classList.remove('hidden');
+                bulkCheckboxes.forEach(cb => cb.classList.remove('hidden'));
+            } else {
+                bulkBtn.innerHTML = '<i class="fas fa-check-square mr-2"></i>Bulk Actions';
+                bulkBtn.classList.remove('bg-primary', 'text-white');
+                bulkBtn.classList.add('btn-secondary');
+                bulkToolbar.classList.add('hidden');
+                bulkCheckboxes.forEach(cb => cb.classList.add('hidden'));
+                deselectAllTasks();
+            }
+        }
+
+        function updateBulkSelection() {
+            const checkboxes = document.querySelectorAll('.task-checkbox:checked');
+            selectedTasks.clear();
+            checkboxes.forEach(cb => {
+                const taskItem = cb.closest('.task-item');
+                selectedTasks.add(taskItem.getAttribute('data-task-id'));
+            });
+            
+            document.getElementById('selectedCount').textContent = `${selectedTasks.size} tasks selected`;
+        }
+
+        function selectAllTasks() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            checkboxes.forEach(cb => cb.checked = true);
+            updateBulkSelection();
+        }
+
+        function deselectAllTasks() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            checkboxes.forEach(cb => cb.checked = false);
+            updateBulkSelection();
+        }
+
+        function bulkMarkComplete() {
+            if (selectedTasks.size === 0) return;
+            
+            selectedTasks.forEach(taskId => {
+                const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
+                const checkbox = taskItem.querySelector('.completion-checkbox');
+                if (!checkbox.checked) {
+                    checkbox.checked = true;
+                    toggleTaskCompletion(taskId);
+                }
+            });
+            
+            showToast(`${selectedTasks.size} tasks marked as completed!`, 'success');
+            deselectAllTasks();
+        }
+
+        function bulkDelete() {
+            if (selectedTasks.size === 0) return;
+            
+            if (confirm(`Are you sure you want to delete ${selectedTasks.size} tasks?`)) {
+                selectedTasks.forEach(taskId => {
+                    const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
+                    taskItem.remove();
+                });
+                
+                showToast(`${selectedTasks.size} tasks deleted successfully`, 'success');
+                selectedTasks.clear();
+                updateTaskStats();
+            }
+        }
+
+        // Filtering and sorting
+        function filterTasks() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            const tasks = document.querySelectorAll('.task-item');
+            
+            tasks.forEach(task => {
+                const status = task.getAttribute('data-status');
+                const category = task.getAttribute('data-category');
+                const priority = task.getAttribute('data-priority');
+                
+                const statusMatch = statusFilter === 'all' || status === statusFilter;
+                const categoryMatch = categoryFilter === 'all' || category === categoryFilter;
+                const priorityMatch = priorityFilter === 'all' || priority === priorityFilter;
+                
+                if (statusMatch && categoryMatch && priorityMatch) {
+                    task.style.display = 'block';
+                } else {
+                    task.style.display = 'none';
+                }
+            });
+            
+            checkEmptyState();
+        }
+
+        function sortTasks() {
+            const sortBy = document.getElementById('sortBy').value;
+            const taskList = document.getElementById('taskList');
+            const tasks = Array.from(taskList.querySelectorAll('.task-item'));
+            
+            tasks.sort((a, b) => {
+                switch (sortBy) {
+                    case 'priority':
+                        const priorityOrder = { high: 3, medium: 2, low: 1 };
+                        return priorityOrder[b.getAttribute('data-priority')] - priorityOrder[a.getAttribute('data-priority')];
+                    case 'category':
+                        return a.getAttribute('data-category').localeCompare(b.getAttribute('data-category'));
+                    case 'title':
+                        return a.querySelector('h4').textContent.localeCompare(b.querySelector('h4').textContent);
+                    case 'dueDate':
+                    default:
+                        // For demo purposes, using a simple comparison
+                        return 0;
+                }
+            });
+            
+            tasks.forEach(task => taskList.appendChild(task));
+            showToast(`Tasks sorted by ${sortBy}`, 'info');
+        }
+
+        // Drag and drop
+        function dragTask(event) {
+            draggedTask = event.target.closest('.task-item');
+            event.target.classList.add('drag-ghost');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function dropTask(event) {
+            event.preventDefault();
+            const dropTarget = event.target.closest('.task-item');
+            
+            if (draggedTask && dropTarget && draggedTask !== dropTarget) {
+                const taskList = document.getElementById('taskList');
+                const draggedIndex = Array.from(taskList.children).indexOf(draggedTask);
+                const dropIndex = Array.from(taskList.children).indexOf(dropTarget);
+                
+                if (draggedIndex < dropIndex) {
+                    dropTarget.parentNode.insertBefore(draggedTask, dropTarget.nextSibling);
+                } else {
+                    dropTarget.parentNode.insertBefore(draggedTask, dropTarget);
+                }
+                
+                showToast('Task reordered successfully', 'success');
+            }
+            
+            document.querySelectorAll('.task-item').forEach(task => {
+                task.classList.remove('drag-ghost');
+            });
+        }
+
+        // Utility functions
+        function updateTaskStats() {
+            const tasks = document.querySelectorAll('.task-item');
+            const pending = document.querySelectorAll('[data-status="pending"]').length;
+            const completed = document.querySelectorAll('[data-status="completed"]').length;
+            const overdue = document.querySelectorAll('[data-status="overdue"]').length;
+            
+            document.getElementById('totalTasks').textContent = tasks.length;
+            document.getElementById('pendingTasks').textContent = pending;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('overdueTasks').textContent = overdue;
+        }
+
+        function checkEmptyState() {
+            const visibleTasks = document.querySelectorAll('.task-item[style="display: block"], .task-item:not([style*="display: none"])');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (visibleTasks.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+
+        function focusTaskInput() {
+            document.getElementById('taskTitle').focus();
+            document.getElementById('taskTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+            
+            messageEl.textContent = message;
+            
+            icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
+                           type === 'error' ? 'fas fa-exclamation-circle text-error' :
+                           'fas fa-info-circle text-accent';
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                hideToast();
+            }, 3000);
+        }
+
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch(event.key) {
+                    case 'n':
+                        event.preventDefault();
+                        focusTaskInput();
+                        break;
+                    case 'a':
+                        if (bulkMode) {
+                            event.preventDefault();
+                            selectAllTasks();
+                        }
+                        break;
+                    case 'b':
+                        event.preventDefault();
+                        toggleBulkMode();
+                        break;
+                }
+            }
+            
+            if (event.key === 'Escape') {
+                if (!document.getElementById('taskModal').classList.contains('hidden')) {
+                    closeModal();
+                }
+                if (bulkMode) {
+                    toggleBulkMode();
+                }
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTaskStats();
+            
+            // Set default due date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDueDate').value = today;
+            
+            // Add drag end event listener
+            document.addEventListener('dragend', function(event) {
+                document.querySelectorAll('.task-item').forEach(task => {
+                    task.classList.remove('drag-ghost');
+                });
+            });
+        });
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>

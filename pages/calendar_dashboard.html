@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Dashboard - Super Scheduler</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+</head>
+<body class="bg-background min-h-screen">
+    <!-- Header Navigation -->
+    <header class="bg-surface border-b border-slate-200 shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+                        </svg>
+                        <h1 class="text-xl font-semibold text-text-primary">Daily Reminder</h1>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="calendar_dashboard.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
+                        <i class="fas fa-calendar-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Event
+                    </a>
+                    <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-tasks mr-2"></i>Tasks
+                    </a>
+                    <a href="search_and_filter.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </a>
+                    <a href="settings_and_preferences.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-md text-text-secondary hover:text-primary hover:bg-slate-50" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 py-4">
+                <div class="flex flex-col space-y-2">
+                    <a href="calendar_dashboard.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
+                        <i class="fas fa-calendar-alt mr-2"></i>Dashboard
+                    </a>
+                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Create Event
+                    </a>
+                    <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-tasks mr-2"></i>Tasks
+                    </a>
+                    <a href="search_and_filter.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </a>
+                    <a href="settings_and_preferences.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- Sidebar -->
+            <aside class="lg:w-80 order-2 lg:order-1">
+                <!-- Quick Event Creation -->
+                <div class="card p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
+                        <i class="fas fa-plus-circle text-primary mr-2"></i>
+                        Quick Event
+                    </h3>
+                    <form class="space-y-4" onsubmit="createQuickEvent(event)">
+                        <div>
+                            <input type="text" placeholder="Event title" class="form-input text-sm" required />
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="date" class="form-input text-sm" required />
+                            <input type="time" class="form-input text-sm" required />
+                        </div>
+                        <div>
+                            <select class="form-input text-sm">
+                                <option value="work">Work</option>
+                                <option value="personal">Personal</option>
+                                <option value="health">Health</option>
+                                <option value="social">Social</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-primary w-full text-sm">
+                            <i class="fas fa-plus mr-2"></i>Add Event
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Upcoming Tasks -->
+                <div class="card p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
+                        <i class="fas fa-clock text-accent mr-2"></i>
+                        Upcoming Tasks
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3 p-3 bg-warning-100 rounded-lg">
+                            <input type="checkbox" class="w-4 h-4 text-primary" />
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-text-primary">Project Presentation</p>
+                                <p class="text-xs text-warning-600">Due: Oct 2, 2025</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-error-100 rounded-lg">
+                            <input type="checkbox" class="w-4 h-4 text-primary" />
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-text-primary">Client Meeting Prep</p>
+                                <p class="text-xs text-error-600">Due: Oct 1, 2025</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-success-100 rounded-lg">
+                            <input type="checkbox" class="w-4 h-4 text-primary" />
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-text-primary">Weekly Report</p>
+                                <p class="text-xs text-success-600">Due: Oct 4, 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="task_management.html" class="block mt-4 text-center text-sm text-primary hover:text-primary-700 font-medium">
+                        View All Tasks <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="card p-6">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
+                        <i class="fas fa-filter text-secondary mr-2"></i>
+                        Categories
+                    </h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" checked class="w-4 h-4 text-primary" />
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span class="text-sm text-text-primary">Work</span>
+                            <span class="text-xs text-text-secondary ml-auto">12</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" checked class="w-4 h-4 text-primary" />
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-sm text-text-primary">Personal</span>
+                            <span class="text-xs text-text-secondary ml-auto">8</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" checked class="w-4 h-4 text-primary" />
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                            <span class="text-sm text-text-primary">Health</span>
+                            <span class="text-xs text-text-secondary ml-auto">3</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="checkbox" checked class="w-4 h-4 text-primary" />
+                            <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                            <span class="text-sm text-text-primary">Social</span>
+                            <span class="text-xs text-text-secondary ml-auto">5</span>
+                        </label>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Calendar Area -->
+            <main class="flex-1 order-1 lg:order-2">
+                <!-- Calendar Header -->
+                <div class="card p-6 mb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <!-- Date Navigation -->
+                        <div class="flex items-center space-x-4">
+                            <button onclick="navigateDate('prev')" class="p-2 rounded-md text-text-secondary hover:text-primary hover:bg-slate-50 transition-colors">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h2 id="currentDate" class="text-2xl font-semibold text-text-primary">October 2025</h2>
+                            <button onclick="navigateDate('next')" class="p-2 rounded-md text-text-secondary hover:text-primary hover:bg-slate-50 transition-colors">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <button onclick="goToToday()" class="btn-secondary text-sm">Today</button>
+                        </div>
+
+                        <!-- View Toggle -->
+                        <div class="flex items-center space-x-2 bg-slate-100 rounded-lg p-1">
+                            <button onclick="changeView('month')" class="view-btn active px-3 py-2 text-sm font-medium rounded-md transition-colors">
+                                Month
+                            </button>
+                            <button onclick="changeView('week')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
+                                Week
+                            </button>
+                            <button onclick="changeView('day')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
+                                Day
+                            </button>
+                            <button onclick="changeView('agenda')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
+                                Agenda
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="card p-6">
+                    <!-- Calendar Days Header -->
+                    <div class="calendar-grid mb-2">
+                        <div class="text-center py-3 text-sm font-medium text-text-secondary">Sun</div>
+                        <div class="text-center py-3 text-sm font-medium text-text-secondary">Mon</div>
+                        <div class="text-center py-3 text-sm font-medium text-text-secondary">Tue</div>
+                        <div class="text-center py-3 text-sm font-medium text-text-secondary">Wed</div>
+                        <div class="text-center py-3 text-sm font-medium text-text-secondary">Thu</div>
+                        <div class="text-center py-3 text-sm font-medium text-text-secondary">Fri</div>
+                        <div class="text-center py-3 text-sm font-medium text-text-secondary">Sat</div>
+                    </div>
+
+                    <!-- Calendar Body -->
+                    <div id="calendarGrid" class="calendar-grid">
+                        <!-- Week 1 -->
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-09-29')">
+                            <div class="text-sm text-text-secondary mb-2">29</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-09-30')">
+                            <div class="text-sm text-text-secondary mb-2">30</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-01')">
+                            <div class="text-sm font-medium text-text-primary mb-2">1</div>
+                            <div class="event-item bg-red-100 text-red-800 border-l-4 border-red-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('client-meeting')">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-medium">Client Meeting</span>
+                                    <i class="fas fa-exclamation-triangle text-red-600 text-xs" title="Conflict detected"></i>
+                                </div>
+                                <div class="text-xs opacity-75">9:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-02')">
+                            <div class="text-sm font-medium text-text-primary mb-2">2</div>
+                            <div class="event-item bg-blue-100 text-blue-800 border-l-4 border-blue-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('team-standup')">
+                                <span class="text-xs font-medium">Team Standup</span>
+                                <div class="text-xs opacity-75">10:00 AM</div>
+                            </div>
+                            <div class="event-item bg-green-100 text-green-800 border-l-4 border-green-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('gym-session')">
+                                <span class="text-xs font-medium">Gym Session</span>
+                                <div class="text-xs opacity-75">6:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-03')">
+                            <div class="text-sm font-medium text-text-primary mb-2">3</div>
+                            <div class="event-item bg-purple-100 text-purple-800 border-l-4 border-purple-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('dinner-friends')">
+                                <span class="text-xs font-medium">Dinner with Friends</span>
+                                <div class="text-xs opacity-75">7:30 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-04')">
+                            <div class="text-sm font-medium text-text-primary mb-2">4</div>
+                            <div class="event-item bg-blue-100 text-blue-800 border-l-4 border-blue-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('project-review')">
+                                <span class="text-xs font-medium">Project Review</span>
+                                <div class="text-xs opacity-75">2:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-05')">
+                            <div class="text-sm font-medium text-text-primary mb-2">5</div>
+                        </div>
+
+                        <!-- Week 2 -->
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-06')">
+                            <div class="text-sm font-medium text-text-primary mb-2">6</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-07')">
+                            <div class="text-sm font-medium text-text-primary mb-2">7</div>
+                            <div class="event-item bg-green-100 text-green-800 border-l-4 border-green-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('doctor-appointment')">
+                                <span class="text-xs font-medium">Doctor Appointment</span>
+                                <div class="text-xs opacity-75">11:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-08')">
+                            <div class="text-sm font-medium text-text-primary mb-2">8</div>
+                            <div class="event-item bg-blue-100 text-blue-800 border-l-4 border-blue-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('quarterly-meeting')">
+                                <span class="text-xs font-medium">Quarterly Meeting</span>
+                                <div class="text-xs opacity-75">9:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-09')">
+                            <div class="text-sm font-medium text-text-primary mb-2">9</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-10')">
+                            <div class="text-sm font-medium text-text-primary mb-2">10</div>
+                            <div class="event-item bg-purple-100 text-purple-800 border-l-4 border-purple-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('movie-night')">
+                                <span class="text-xs font-medium">Movie Night</span>
+                                <div class="text-xs opacity-75">8:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-11')">
+                            <div class="text-sm font-medium text-text-primary mb-2">11</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-12')">
+                            <div class="text-sm font-medium text-text-primary mb-2">12</div>
+                        </div>
+
+                        <!-- Week 3 -->
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-13')">
+                            <div class="text-sm font-medium text-text-primary mb-2">13</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-14')">
+                            <div class="text-sm font-medium text-text-primary mb-2">14</div>
+                            <div class="event-item bg-green-100 text-green-800 border-l-4 border-green-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('yoga-class')">
+                                <span class="text-xs font-medium">Yoga Class</span>
+                                <div class="text-xs opacity-75">7:00 AM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-15')">
+                            <div class="text-sm font-medium text-text-primary mb-2">15</div>
+                            <div class="event-item bg-blue-100 text-blue-800 border-l-4 border-blue-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('client-presentation')">
+                                <span class="text-xs font-medium">Client Presentation</span>
+                                <div class="text-xs opacity-75">3:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-16')">
+                            <div class="text-sm font-medium text-text-primary mb-2">16</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-17')">
+                            <div class="text-sm font-medium text-text-primary mb-2">17</div>
+                            <div class="event-item bg-purple-100 text-purple-800 border-l-4 border-purple-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('birthday-party')">
+                                <span class="text-xs font-medium">Birthday Party</span>
+                                <div class="text-xs opacity-75">6:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-18')">
+                            <div class="text-sm font-medium text-text-primary mb-2">18</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-19')">
+                            <div class="text-sm font-medium text-text-primary mb-2">19</div>
+                        </div>
+
+                        <!-- Week 4 -->
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-20')">
+                            <div class="text-sm font-medium text-text-primary mb-2">20</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-21')">
+                            <div class="text-sm font-medium text-text-primary mb-2">21</div>
+                            <div class="event-item bg-blue-100 text-blue-800 border-l-4 border-blue-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('team-building')">
+                                <span class="text-xs font-medium">Team Building</span>
+                                <div class="text-xs opacity-75">1:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-22')">
+                            <div class="text-sm font-medium text-text-primary mb-2">22</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-23')">
+                            <div class="text-sm font-medium text-text-primary mb-2">23</div>
+                            <div class="event-item bg-green-100 text-green-800 border-l-4 border-green-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('dentist-checkup')">
+                                <span class="text-xs font-medium">Dentist Checkup</span>
+                                <div class="text-xs opacity-75">2:30 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-24')">
+                            <div class="text-sm font-medium text-text-primary mb-2">24</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-25')">
+                            <div class="text-sm font-medium text-text-primary mb-2">25</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-26')">
+                            <div class="text-sm font-medium text-text-primary mb-2">26</div>
+                        </div>
+
+                        <!-- Week 5 -->
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-27')">
+                            <div class="text-sm font-medium text-text-primary mb-2">27</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-28')">
+                            <div class="text-sm font-medium text-text-primary mb-2">28</div>
+                            <div class="event-item bg-blue-100 text-blue-800 border-l-4 border-blue-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('monthly-review')">
+                                <span class="text-xs font-medium">Monthly Review</span>
+                                <div class="text-xs opacity-75">4:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-29')">
+                            <div class="text-sm font-medium text-text-primary mb-2">29</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-30')">
+                            <div class="text-sm font-medium text-text-primary mb-2">30</div>
+                            <div class="text-sm bg-primary text-white px-2 py-1 rounded text-center font-medium">Today</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-10-31')">
+                            <div class="text-sm font-medium text-text-primary mb-2">31</div>
+                            <div class="event-item bg-purple-100 text-purple-800 border-l-4 border-purple-500 cursor-pointer" draggable="true" ondragstart="dragEvent(event)" onclick="editEvent('halloween-party')">
+                                <span class="text-xs font-medium">Halloween Party</span>
+                                <div class="text-xs opacity-75">8:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-11-01')">
+                            <div class="text-sm text-text-secondary mb-2">1</div>
+                        </div>
+                        <div class="calendar-cell" ondrop="dropEvent(event)" ondragover="allowDrop(event)" ondblclick="quickCreateEvent(event, '2025-11-02')">
+                            <div class="text-sm text-text-secondary mb-2">2</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="flex items-center space-x-3">
+            <div class="flex-shrink-0">
+                <i id="toastIcon" class="fas fa-check-circle text-success"></i>
+            </div>
+            <div>
+                <p id="toastMessage" class="text-sm font-medium text-text-primary">Event created successfully!</p>
+            </div>
+            <button onclick="hideToast()" class="ml-auto text-text-secondary hover:text-text-primary">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Event Edit Modal -->
+    <div id="eventModal" class="modal-overlay hidden" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-text-primary">Edit Event</h3>
+                <button onclick="closeModal()" class="text-text-secondary hover:text-text-primary">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Title</label>
+                    <input type="text" id="eventTitle" class="form-input" value="Client Meeting" />
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">Date</label>
+                        <input type="date" id="eventDate" class="form-input" value="2025-10-01" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-1">Time</label>
+                        <input type="time" id="eventTime" class="form-input" value="09:00" />
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Category</label>
+                    <select id="eventCategory" class="form-input">
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="health">Health</option>
+                        <option value="social">Social</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">Description</label>
+                    <textarea id="eventDescription" class="form-input" rows="3" placeholder="Event description..."></textarea>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="deleteEvent()" class="px-4 py-2 text-error hover:bg-error-100 rounded-md transition-colors">
+                        <i class="fas fa-trash mr-2"></i>Delete
+                    </button>
+                    <button type="button" onclick="closeModal()" class="btn-secondary">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // View toggle functionality
+        function changeView(view) {
+            const buttons = document.querySelectorAll('.view-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-primary', 'text-white');
+                btn.classList.add('text-text-secondary', 'hover:text-primary');
+            });
+            
+            event.target.classList.add('active', 'bg-primary', 'text-white');
+            event.target.classList.remove('text-text-secondary', 'hover:text-primary');
+            
+            showToast(`Switched to ${view} view`, 'info');
+        }
+
+        // Date navigation
+        function navigateDate(direction) {
+            const currentDateEl = document.getElementById('currentDate');
+            showToast(`Navigated ${direction === 'prev' ? 'previous' : 'next'} month`, 'info');
+        }
+
+        function goToToday() {
+            showToast('Navigated to today', 'info');
+        }
+
+        // Drag and drop functionality
+        function dragEvent(event) {
+            event.dataTransfer.setData('text/plain', event.target.outerHTML);
+            event.target.classList.add('drag-ghost');
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drop-zone', 'active');
+        }
+
+        function dropEvent(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drop-zone', 'active');
+            showToast('Event rescheduled successfully', 'success');
+        }
+
+        // Quick event creation
+        function quickCreateEvent(event, date) {
+            showToast(`Quick event creation for ${date}`, 'info');
+            // In a real app, this would open a quick creation modal
+        }
+
+        function createQuickEvent(event) {
+            event.preventDefault();
+            showToast('Event created successfully!', 'success');
+            event.target.reset();
+        }
+
+        // Event editing
+        function editEvent(eventId) {
+            document.getElementById('eventModal').classList.remove('hidden');
+            setTimeout(() => {
+                document.querySelector('.modal-content').classList.add('show');
+            }, 10);
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            document.querySelector('.modal-content').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('eventModal').classList.add('hidden');
+            }, 300);
+        }
+
+        function deleteEvent() {
+            showToast('Event deleted successfully', 'success');
+            closeModal();
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+            
+            messageEl.textContent = message;
+            
+            // Set icon based on type
+            icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
+                           type === 'error' ? 'fas fa-exclamation-circle text-error' :
+                           'fas fa-info-circle text-accent';
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                hideToast();
+            }, 3000);
+        }
+
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch(event.key) {
+                    case 'n':
+                        event.preventDefault();
+                        window.location.href = 'event_creation.html';
+                        break;
+                    case 't':
+                        event.preventDefault();
+                        window.location.href = 'task_management.html';
+                        break;
+                    case 'f':
+                        event.preventDefault();
+                        window.location.href = 'search_and_filter.html';
+                        break;
+                }
+            }
+        });
+
+        // Initialize calendar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial view
+            const monthBtn = document.querySelector('.view-btn');
+            monthBtn.classList.add('active', 'bg-primary', 'text-white');
+            
+            // Add event listeners for drag and drop cleanup
+            document.addEventListener('dragend', function(event) {
+                event.target.classList.remove('drag-ghost');
+                document.querySelectorAll('.drop-zone').forEach(zone => {
+                    zone.classList.remove('drop-zone', 'active');
+                });
+            });
+        });
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>
