@@ -186,7 +186,7 @@
                     <button onclick="bulkMarkComplete()" class="btn-secondary text-sm">
                         <i class="fas fa-check mr-2"></i>Mark Complete
                     </button>
-                    <select id="bulkCategory" class="form-input text-sm w-auto">
+                    <select id="bulkCategory" class="form-input text-sm w-auto" onchange="bulkChangeCategory()">
                         <option value>Change Category</option>
                         <option value="work">Work</option>
                         <option value="personal">Personal</option>
@@ -206,7 +206,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-text-secondary">Total Tasks</p>
-                        <p id="totalTasks" class="text-2xl font-semibold text-text-primary">12</p>
+                        <p id="totalTasks" class="text-2xl font-semibold text-text-primary">0</p>
                     </div>
                     <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-tasks text-primary"></i>
@@ -217,7 +217,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-text-secondary">Pending</p>
-                        <p id="pendingTasks" class="text-2xl font-semibold text-warning">8</p>
+                        <p id="pendingTasks" class="text-2xl font-semibold text-warning">0</p>
                     </div>
                     <div class="w-10 h-10 bg-warning-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-clock text-warning"></i>
@@ -228,7 +228,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-text-secondary">Completed</p>
-                        <p id="completedTasks" class="text-2xl font-semibold text-success">3</p>
+                        <p id="completedTasks" class="text-2xl font-semibold text-success">0</p>
                     </div>
                     <div class="w-10 h-10 bg-success-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-check-circle text-success"></i>
@@ -239,7 +239,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-text-secondary">Overdue</p>
-                        <p id="overdueTasks" class="text-2xl font-semibold text-error">1</p>
+                        <p id="overdueTasks" class="text-2xl font-semibold text-error">0</p>
                     </div>
                     <div class="w-10 h-10 bg-error-100 rounded-lg flex items-center justify-center">
                         <i class="fas fa-exclamation-triangle text-error"></i>
@@ -258,210 +258,11 @@
             </div>
             
             <div id="taskList" class="divide-y divide-slate-200">
-                <!-- Task Item 1 - Overdue -->
-                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="1" data-status="overdue" data-category="work" data-priority="high" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
-                    <div class="flex items-center space-x-4">
-                        <div class="bulk-checkbox hidden">
-                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(1)" />
-                            <div class="w-3 h-3 bg-blue-500 rounded-full" title="Work category"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <h4 class="text-base font-medium text-text-primary truncate">Project Presentation Prep</h4>
-                                <span class="px-2 py-1 text-xs font-medium bg-error-100 text-error-600 rounded-full">High Priority</span>
-                                <span class="px-2 py-1 text-xs font-medium bg-error-100 text-error-600 rounded-full">Overdue</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
-                                <span class="flex items-center">
-                                    <i class="fas fa-calendar-alt mr-1"></i>
-                                    Due: Sep 28, 2025
-                                </span>
-                                <span class="flex items-center">
-                                    <i class="fas fa-briefcase mr-1"></i>
-                                    Work
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="editTask(1)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteTask(1)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
-                                <i class="fas fa-grip-vertical"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Task Item 2 - High Priority -->
-                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="2" data-status="pending" data-category="work" data-priority="high" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
-                    <div class="flex items-center space-x-4">
-                        <div class="bulk-checkbox hidden">
-                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(2)" />
-                            <div class="w-3 h-3 bg-blue-500 rounded-full" title="Work category"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <h4 class="text-base font-medium text-text-primary truncate">Client Meeting Follow-up</h4>
-                                <span class="px-2 py-1 text-xs font-medium bg-error-100 text-error-600 rounded-full">High Priority</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
-                                <span class="flex items-center">
-                                    <i class="fas fa-calendar-alt mr-1"></i>
-                                    Due: Oct 2, 2025
-                                </span>
-                                <span class="flex items-center">
-                                    <i class="fas fa-briefcase mr-1"></i>
-                                    Work
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="editTask(2)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteTask(2)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
-                                <i class="fas fa-grip-vertical"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Task Item 3 - Medium Priority -->
-                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="3" data-status="pending" data-category="personal" data-priority="medium" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
-                    <div class="flex items-center space-x-4">
-                        <div class="bulk-checkbox hidden">
-                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(3)" />
-                            <div class="w-3 h-3 bg-green-500 rounded-full" title="Personal category"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <h4 class="text-base font-medium text-text-primary truncate">Grocery Shopping</h4>
-                                <span class="px-2 py-1 text-xs font-medium bg-warning-100 text-warning-600 rounded-full">Medium Priority</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
-                                <span class="flex items-center">
-                                    <i class="fas fa-calendar-alt mr-1"></i>
-                                    Due: Oct 1, 2025
-                                </span>
-                                <span class="flex items-center">
-                                    <i class="fas fa-user mr-1"></i>
-                                    Personal
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="editTask(3)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteTask(3)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
-                                <i class="fas fa-grip-vertical"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Task Item 4 - Completed -->
-                <div class="task-item p-4 hover:bg-slate-50 transition-colors opacity-60" data-task-id="4" data-status="completed" data-category="health" data-priority="low" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
-                    <div class="flex items-center space-x-4">
-                        <div class="bulk-checkbox hidden">
-                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" checked class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(4)" />
-                            <div class="w-3 h-3 bg-red-500 rounded-full" title="Health category"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <h4 class="text-base font-medium text-text-primary truncate line-through">Morning Workout</h4>
-                                <span class="px-2 py-1 text-xs font-medium bg-success-100 text-success-600 rounded-full">Completed</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
-                                <span class="flex items-center">
-                                    <i class="fas fa-calendar-alt mr-1"></i>
-                                    Due: Sep 30, 2025
-                                </span>
-                                <span class="flex items-center">
-                                    <i class="fas fa-heart mr-1"></i>
-                                    Health
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="editTask(4)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteTask(4)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
-                                <i class="fas fa-grip-vertical"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Task Item 5 - Low Priority -->
-                <div class="task-item p-4 hover:bg-slate-50 transition-colors" data-task-id="5" data-status="pending" data-category="social" data-priority="low" draggable="true" ondragstart="dragTask(event)" ondragover="allowDrop(event)" ondrop="dropTask(event)">
-                    <div class="flex items-center space-x-4">
-                        <div class="bulk-checkbox hidden">
-                            <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <input type="checkbox" class="w-5 h-5 text-primary completion-checkbox" onchange="toggleTaskCompletion(5)" />
-                            <div class="w-3 h-3 bg-purple-500 rounded-full" title="Social category"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <h4 class="text-base font-medium text-text-primary truncate">Plan Weekend Trip</h4>
-                                <span class="px-2 py-1 text-xs font-medium bg-secondary-100 text-secondary-600 rounded-full">Low Priority</span>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
-                                <span class="flex items-center">
-                                    <i class="fas fa-calendar-alt mr-1"></i>
-                                    Due: Oct 5, 2025
-                                </span>
-                                <span class="flex items-center">
-                                    <i class="fas fa-users mr-1"></i>
-                                    Social
-                                </span>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="editTask(5)" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteTask(5)" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                            <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
-                                <i class="fas fa-grip-vertical"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Tasks will be populated by JavaScript -->
             </div>
 
-            <!-- Empty State (Hidden by default) -->
-            <div id="emptyState" class="hidden p-12 text-center">
+            <!-- Empty State -->
+            <div id="emptyState" class="p-12 text-center">
                 <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-tasks text-2xl text-slate-400"></i>
                 </div>
@@ -475,12 +276,12 @@
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="toast">
+    <div id="toast" class="fixed top-20 right-4 p-4 rounded-lg border shadow-lg bg-white transform translate-x-full transition-transform duration-300 z-50 max-w-sm">
         <div class="flex items-center space-x-3">
             <div class="flex-shrink-0">
                 <i id="toastIcon" class="fas fa-check-circle text-success"></i>
             </div>
-            <div>
+            <div class="flex-1">
                 <p id="toastMessage" class="text-sm font-medium text-text-primary">Task created successfully!</p>
             </div>
             <button onclick="hideToast()" class="ml-auto text-text-secondary hover:text-text-primary">
@@ -499,28 +300,29 @@
                 </button>
             </div>
             <form class="space-y-4" onsubmit="saveTask(event)">
+                <input type="hidden" id="editTaskId" />
                 <div>
                     <label class="block text-sm font-medium text-text-primary mb-1">Title</label>
-                    <input type="text" id="editTaskTitle" class="form-input" value="Project Presentation Prep" required />
+                    <input type="text" id="editTaskTitle" class="form-input" required />
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-text-primary mb-1">Due Date</label>
-                        <input type="date" id="editTaskDate" class="form-input" value="2025-09-28" required />
+                        <input type="date" id="editTaskDate" class="form-input" required />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-text-primary mb-1">Priority</label>
                         <select id="editTaskPriority" class="form-input">
                             <option value="low">Low Priority</option>
                             <option value="medium">Medium Priority</option>
-                            <option value="high" selected>High Priority</option>
+                            <option value="high">High Priority</option>
                         </select>
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-text-primary mb-1">Category</label>
                     <select id="editTaskCategory" class="form-input">
-                        <option value="work" selected>Work</option>
+                        <option value="work">Work</option>
                         <option value="personal">Personal</option>
                         <option value="health">Health</option>
                         <option value="social">Social</option>
@@ -550,6 +352,33 @@
         let bulkMode = false;
         let selectedTasks = new Set();
         let draggedTask = null;
+        let tasks = [];
+
+        // Local Storage functions
+        function saveTasksToStorage() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function loadTasksFromStorage() {
+            const stored = localStorage.getItem('tasks');
+            if (stored) {
+                tasks = JSON.parse(stored);
+            }
+        }
+
+        function generateTaskId() {
+            return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+        }
+
+        function getTaskStatus(task) {
+            if (task.status === 'completed') return 'completed';
+            
+            const today = new Date();
+            const dueDate = new Date(task.dueDate);
+            
+            if (dueDate < today) return 'overdue';
+            return 'pending';
+        }
 
         // Mobile menu toggle
         function toggleMobileMenu() {
@@ -560,38 +389,69 @@
         // Task creation
         function createTask(event) {
             event.preventDefault();
-            const title = document.getElementById('taskTitle').value;
+            const title = document.getElementById('taskTitle').value.trim();
             const dueDate = document.getElementById('taskDueDate').value;
             const category = document.getElementById('taskCategory').value;
             const priority = document.getElementById('taskPriority').value;
             
-            showToast('Task created successfully!', 'success');
-            event.target.reset();
+            if (!title || !dueDate) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const newTask = {
+                id: generateTaskId(),
+                title: title,
+                dueDate: dueDate,
+                category: category,
+                priority: priority,
+                status: 'pending',
+                description: '',
+                createdAt: new Date().toISOString()
+            };
+            
+            tasks.push(newTask);
+            saveTasksToStorage();
+            renderTasks();
             updateTaskStats();
+            
+            // Reset form
+            event.target.reset();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('taskDueDate').value = today;
+            
+            showToast('Task created successfully!', 'success');
         }
 
         // Task completion toggle
         function toggleTaskCompletion(taskId) {
-            const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
-            const checkbox = taskItem.querySelector('.completion-checkbox');
-            const title = taskItem.querySelector('h4');
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
             
-            if (checkbox.checked) {
-                taskItem.classList.add('opacity-60');
-                title.classList.add('line-through');
-                taskItem.setAttribute('data-status', 'completed');
-                showToast('Task marked as completed!', 'success');
-            } else {
-                taskItem.classList.remove('opacity-60');
-                title.classList.remove('line-through');
-                taskItem.setAttribute('data-status', 'pending');
-                showToast('Task marked as pending', 'info');
-            }
+            task.status = task.status === 'completed' ? 'pending' : 'completed';
+            task.completedAt = task.status === 'completed' ? new Date().toISOString() : null;
+            
+            saveTasksToStorage();
+            renderTasks();
             updateTaskStats();
+            
+            const message = task.status === 'completed' ? 'Task marked as completed!' : 'Task marked as pending';
+            const type = task.status === 'completed' ? 'success' : 'info';
+            showToast(message, type);
         }
 
         // Task editing
         function editTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            document.getElementById('editTaskId').value = taskId;
+            document.getElementById('editTaskTitle').value = task.title;
+            document.getElementById('editTaskDate').value = task.dueDate;
+            document.getElementById('editTaskPriority').value = task.priority;
+            document.getElementById('editTaskCategory').value = task.category;
+            document.getElementById('editTaskDescription').value = task.description || '';
+            
             document.getElementById('taskModal').classList.remove('hidden');
             setTimeout(() => {
                 document.querySelector('.modal-content').classList.add('show');
@@ -600,24 +460,59 @@
 
         function saveTask(event) {
             event.preventDefault();
-            showToast('Task updated successfully!', 'success');
-            closeModal();
+            const taskId = document.getElementById('editTaskId').value;
+            const title = document.getElementById('editTaskTitle').value.trim();
+            const dueDate = document.getElementById('editTaskDate').value;
+            const priority = document.getElementById('editTaskPriority').value;
+            const category = document.getElementById('editTaskCategory').value;
+            const description = document.getElementById('editTaskDescription').value;
+            
+            if (!title || !dueDate) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            const taskIndex = tasks.findIndex(t => t.id === taskId);
+            if (taskIndex !== -1) {
+                tasks[taskIndex] = {
+                    ...tasks[taskIndex],
+                    title: title,
+                    dueDate: dueDate,
+                    priority: priority,
+                    category: category,
+                    description: description,
+                    updatedAt: new Date().toISOString()
+                };
+                
+                saveTasksToStorage();
+                renderTasks();
+                updateTaskStats();
+                showToast('Task updated successfully!', 'success');
+                closeModal();
+            }
         }
 
         function deleteTask(taskId) {
             if (confirm('Are you sure you want to delete this task?')) {
-                const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
-                taskItem.remove();
-                showToast('Task deleted successfully', 'success');
+                tasks = tasks.filter(t => t.id !== taskId);
+                saveTasksToStorage();
+                renderTasks();
                 updateTaskStats();
+                showToast('Task deleted successfully', 'success');
             }
         }
 
         function deleteTaskFromModal() {
+            const taskId = document.getElementById('editTaskId').value;
+            if (!taskId) return;
+            
             if (confirm('Are you sure you want to delete this task?')) {
+                tasks = tasks.filter(t => t.id !== taskId);
+                saveTasksToStorage();
+                renderTasks();
+                updateTaskStats();
                 showToast('Task deleted successfully', 'success');
                 closeModal();
-                updateTaskStats();
             }
         }
 
@@ -639,7 +534,7 @@
             const bulkCheckboxes = document.querySelectorAll('.bulk-checkbox');
             
             if (bulkMode) {
-                bulkBtn.textContent = 'Exit Bulk Mode';
+                bulkBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Exit Bulk Mode';
                 bulkBtn.classList.add('bg-primary', 'text-white');
                 bulkBtn.classList.remove('btn-secondary');
                 bulkToolbar.classList.remove('hidden');
@@ -667,44 +562,79 @@
 
         function selectAllTasks() {
             const checkboxes = document.querySelectorAll('.task-checkbox');
-            checkboxes.forEach(cb => cb.checked = true);
+            checkboxes.forEach(cb => {
+                cb.checked = true;
+            });
             updateBulkSelection();
         }
 
         function deselectAllTasks() {
             const checkboxes = document.querySelectorAll('.task-checkbox');
-            checkboxes.forEach(cb => cb.checked = false);
+            checkboxes.forEach(cb => {
+                cb.checked = false;
+            });
             updateBulkSelection();
         }
 
         function bulkMarkComplete() {
-            if (selectedTasks.size === 0) return;
+            if (selectedTasks.size === 0) {
+                showToast('Please select tasks to mark as complete', 'error');
+                return;
+            }
             
             selectedTasks.forEach(taskId => {
-                const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
-                const checkbox = taskItem.querySelector('.completion-checkbox');
-                if (!checkbox.checked) {
-                    checkbox.checked = true;
-                    toggleTaskCompletion(taskId);
+                const task = tasks.find(t => t.id === taskId);
+                if (task && task.status !== 'completed') {
+                    task.status = 'completed';
+                    task.completedAt = new Date().toISOString();
                 }
             });
             
+            saveTasksToStorage();
+            renderTasks();
+            updateTaskStats();
             showToast(`${selectedTasks.size} tasks marked as completed!`, 'success');
             deselectAllTasks();
         }
 
+        function bulkChangeCategory() {
+            const newCategory = document.getElementById('bulkCategory').value;
+            if (!newCategory || selectedTasks.size === 0) {
+                if (!newCategory) document.getElementById('bulkCategory').value = '';
+                if (selectedTasks.size === 0) showToast('Please select tasks to change category', 'error');
+                return;
+            }
+            
+            selectedTasks.forEach(taskId => {
+                const task = tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.category = newCategory;
+                    task.updatedAt = new Date().toISOString();
+                }
+            });
+            
+            saveTasksToStorage();
+            renderTasks();
+            updateTaskStats();
+            showToast(`${selectedTasks.size} tasks moved to ${newCategory}`, 'success');
+            document.getElementById('bulkCategory').value = '';
+            deselectAllTasks();
+        }
+
         function bulkDelete() {
-            if (selectedTasks.size === 0) return;
+            if (selectedTasks.size === 0) {
+                showToast('Please select tasks to delete', 'error');
+                return;
+            }
             
             if (confirm(`Are you sure you want to delete ${selectedTasks.size} tasks?`)) {
-                selectedTasks.forEach(taskId => {
-                    const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
-                    taskItem.remove();
-                });
-                
+                tasks = tasks.filter(t => !selectedTasks.has(t.id));
+                saveTasksToStorage();
+                renderTasks();
+                updateTaskStats();
                 showToast(`${selectedTasks.size} tasks deleted successfully`, 'success');
                 selectedTasks.clear();
-                updateTaskStats();
+                updateBulkSelection();
             }
         }
 
@@ -713,50 +643,146 @@
             const statusFilter = document.getElementById('statusFilter').value;
             const categoryFilter = document.getElementById('categoryFilter').value;
             const priorityFilter = document.getElementById('priorityFilter').value;
-            const tasks = document.querySelectorAll('.task-item');
             
-            tasks.forEach(task => {
-                const status = task.getAttribute('data-status');
-                const category = task.getAttribute('data-category');
-                const priority = task.getAttribute('data-priority');
-                
-                const statusMatch = statusFilter === 'all' || status === statusFilter;
-                const categoryMatch = categoryFilter === 'all' || category === categoryFilter;
-                const priorityMatch = priorityFilter === 'all' || priority === priorityFilter;
-                
-                if (statusMatch && categoryMatch && priorityMatch) {
-                    task.style.display = 'block';
-                } else {
-                    task.style.display = 'none';
-                }
-            });
+            let filteredTasks = tasks;
             
-            checkEmptyState();
+            if (statusFilter !== 'all') {
+                filteredTasks = filteredTasks.filter(task => getTaskStatus(task) === statusFilter);
+            }
+            
+            if (categoryFilter !== 'all') {
+                filteredTasks = filteredTasks.filter(task => task.category === categoryFilter);
+            }
+            
+            if (priorityFilter !== 'all') {
+                filteredTasks = filteredTasks.filter(task => task.priority === priorityFilter);
+            }
+            
+            renderTasks(filteredTasks);
         }
 
         function sortTasks() {
             const sortBy = document.getElementById('sortBy').value;
-            const taskList = document.getElementById('taskList');
-            const tasks = Array.from(taskList.querySelectorAll('.task-item'));
             
-            tasks.sort((a, b) => {
+            const sortedTasks = [...tasks].sort((a, b) => {
                 switch (sortBy) {
                     case 'priority':
                         const priorityOrder = { high: 3, medium: 2, low: 1 };
-                        return priorityOrder[b.getAttribute('data-priority')] - priorityOrder[a.getAttribute('data-priority')];
+                        return priorityOrder[b.priority] - priorityOrder[a.priority];
                     case 'category':
-                        return a.getAttribute('data-category').localeCompare(b.getAttribute('data-category'));
+                        return a.category.localeCompare(b.category);
                     case 'title':
-                        return a.querySelector('h4').textContent.localeCompare(b.querySelector('h4').textContent);
+                        return a.title.localeCompare(b.title);
                     case 'dueDate':
                     default:
-                        // For demo purposes, using a simple comparison
-                        return 0;
+                        return new Date(a.dueDate) - new Date(b.dueDate);
                 }
             });
             
-            tasks.forEach(task => taskList.appendChild(task));
+            renderTasks(sortedTasks);
             showToast(`Tasks sorted by ${sortBy}`, 'info');
+        }
+
+        // Task rendering
+        function renderTasks(tasksToRender = null) {
+            const taskList = document.getElementById('taskList');
+            const emptyState = document.getElementById('emptyState');
+            const tasksArray = tasksToRender || tasks;
+            
+            if (tasksArray.length === 0) {
+                taskList.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            taskList.innerHTML = tasksArray.map(task => {
+                const status = getTaskStatus(task);
+                const statusClass = status === 'completed' ? 'opacity-60' : '';
+                const titleClass = status === 'completed' ? 'line-through' : '';
+                const priorityColor = task.priority === 'high' ? 'bg-error-100 text-error-600' :
+                                   task.priority === 'medium' ? 'bg-warning-100 text-warning-600' :
+                                   'bg-secondary-100 text-secondary-600';
+                const statusColor = status === 'completed' ? 'bg-success-100 text-success-600' :
+                                  status === 'overdue' ? 'bg-error-100 text-error-600' :
+                                  '';
+                const categoryColor = {
+                    work: 'bg-blue-500',
+                    personal: 'bg-green-500',
+                    health: 'bg-red-500',
+                    social: 'bg-purple-500'
+                }[task.category];
+                const categoryIcon = {
+                    work: 'fas fa-briefcase',
+                    personal: 'fas fa-user',
+                    health: 'fas fa-heart',
+                    social: 'fas fa-users'
+                }[task.category];
+                
+                return `
+                    <div class="task-item p-4 hover:bg-slate-50 transition-colors ${statusClass}" 
+                         data-task-id="${task.id}" 
+                         data-status="${status}" 
+                         data-category="${task.category}" 
+                         data-priority="${task.priority}" 
+                         draggable="true" 
+                         ondragstart="dragTask(event)" 
+                         ondragover="allowDrop(event)" 
+                         ondrop="dropTask(event)">
+                        <div class="flex items-center space-x-4">
+                            <div class="bulk-checkbox hidden">
+                                <input type="checkbox" class="w-4 h-4 text-primary task-checkbox" onchange="updateBulkSelection()" />
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" ${status === 'completed' ? 'checked' : ''} 
+                                       class="w-5 h-5 text-primary completion-checkbox" 
+                                       onchange="toggleTaskCompletion('${task.id}')" />
+                                <div class="w-3 h-3 ${categoryColor} rounded-full" title="${task.category} category"></div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <h4 class="text-base font-medium text-text-primary truncate ${titleClass}">${task.title}</h4>
+                                    <span class="px-2 py-1 text-xs font-medium ${priorityColor} rounded-full">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)} Priority</span>
+                                    ${status === 'overdue' ? '<span class="px-2 py-1 text-xs font-medium bg-error-100 text-error-600 rounded-full">Overdue</span>' : ''}
+                                    ${status === 'completed' ? '<span class="px-2 py-1 text-xs font-medium bg-success-100 text-success-600 rounded-full">Completed</span>' : ''}
+                                </div>
+                                <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-calendar-alt mr-1"></i>
+                                        Due: ${new Date(task.dueDate).toLocaleDateString()}
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="${categoryIcon} mr-1"></i>
+                                        ${task.category.charAt(0).toUpperCase() + task.category.slice(1)}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="editTask('${task.id}')" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-100 rounded-md transition-colors">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteTask('${task.id}')" class="p-2 text-text-secondary hover:text-error hover:bg-error-100 rounded-md transition-colors">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <div class="drag-handle cursor-move p-2 text-text-secondary hover:text-primary">
+                                    <i class="fas fa-grip-vertical"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Update bulk checkboxes visibility
+            const bulkCheckboxes = document.querySelectorAll('.bulk-checkbox');
+            bulkCheckboxes.forEach(cb => {
+                if (bulkMode) {
+                    cb.classList.remove('hidden');
+                } else {
+                    cb.classList.add('hidden');
+                }
+            });
         }
 
         // Drag and drop
@@ -794,26 +820,15 @@
 
         // Utility functions
         function updateTaskStats() {
-            const tasks = document.querySelectorAll('.task-item');
-            const pending = document.querySelectorAll('[data-status="pending"]').length;
-            const completed = document.querySelectorAll('[data-status="completed"]').length;
-            const overdue = document.querySelectorAll('[data-status="overdue"]').length;
+            const total = tasks.length;
+            const pending = tasks.filter(t => getTaskStatus(t) === 'pending').length;
+            const completed = tasks.filter(t => getTaskStatus(t) === 'completed').length;
+            const overdue = tasks.filter(t => getTaskStatus(t) === 'overdue').length;
             
-            document.getElementById('totalTasks').textContent = tasks.length;
+            document.getElementById('totalTasks').textContent = total;
             document.getElementById('pendingTasks').textContent = pending;
             document.getElementById('completedTasks').textContent = completed;
             document.getElementById('overdueTasks').textContent = overdue;
-        }
-
-        function checkEmptyState() {
-            const visibleTasks = document.querySelectorAll('.task-item[style="display: block"], .task-item:not([style*="display: none"])');
-            const emptyState = document.getElementById('emptyState');
-            
-            if (visibleTasks.length === 0) {
-                emptyState.classList.remove('hidden');
-            } else {
-                emptyState.classList.add('hidden');
-            }
         }
 
         function focusTaskInput() {
@@ -833,7 +848,9 @@
                            type === 'error' ? 'fas fa-exclamation-circle text-error' :
                            'fas fa-info-circle text-accent';
             
-            toast.classList.add('show');
+            // Show toast
+            toast.classList.remove('translate-x-full');
+            toast.classList.add('translate-x-0');
             
             setTimeout(() => {
                 hideToast();
@@ -841,7 +858,9 @@
         }
 
         function hideToast() {
-            document.getElementById('toast').classList.remove('show');
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-x-0');
+            toast.classList.add('translate-x-full');
         }
 
         // Keyboard shortcuts
@@ -877,6 +896,8 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            loadTasksFromStorage();
+            renderTasks();
             updateTaskStats();
             
             // Set default due date to today
