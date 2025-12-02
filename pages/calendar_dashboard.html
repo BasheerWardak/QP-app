@@ -28,9 +28,6 @@
                     <a href="calendar_dashboard.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
-                    </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
                     </a>
@@ -54,9 +51,6 @@
                     <a href="calendar_dashboard.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
-                    </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
                     </a>
@@ -76,6 +70,23 @@
         <div class="flex flex-col lg:flex-row gap-6">
             <!-- Sidebar -->
             <aside class="lg:w-80 order-2 lg:order-1">
+                <!-- Import/Export -->
+                <div class="card p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
+                        <i class="fas fa-file-export text-secondary mr-2"></i>
+                        Import/Export
+                    </h3>
+                    <div class="flex gap-2">
+                        <button onclick="exportData()" class="btn-secondary flex-1 text-sm">
+                            <i class="fas fa-download mr-2"></i>Export
+                        </button>
+                        <button onclick="document.getElementById('importFile').click()" class="btn-secondary flex-1 text-sm">
+                            <i class="fas fa-upload mr-2"></i>Import
+                        </button>
+                    </div>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)" />
+                </div>
+
                 <!-- Quick Event Creation -->
                 <div class="card p-6 mb-6">
                     <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
@@ -89,6 +100,9 @@
                         <div class="grid grid-cols-2 gap-2">
                             <input type="date" id="quickEventDate" class="form-input text-sm" required />
                             <input type="time" id="quickEventTime" class="form-input text-sm" required />
+                        </div>
+                        <div>
+                            <input type="time" id="quickEventEndTime" placeholder="End time" class="form-input text-sm" required />
                         </div>
                         <div>
                             <select id="quickEventCategory" class="form-input text-sm">
@@ -171,7 +185,7 @@
                         </div>
 
                         <!-- View Toggle -->
-                        <div class="flex items-center space-x-2 bg-slate-100 rounded-lg p-1">
+                        <div class="flex items-center space-x-2 bg-slate-100 rounded-lg p-1 hidden">
                             <button onclick="changeView('month')" class="view-btn active px-3 py-2 text-sm font-medium rounded-md transition-colors">
                                 Month
                             </button>
@@ -234,7 +248,7 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <form class="space-y-4" onsubmit="saveEventModal(event)">
+            <form class="space-y-4" onsubmit="saveEventModal(event)" onkeydown="handleModalKeydown(event)">
                 <input type="hidden" id="editEventId" />
                 <div>
                     <label class="block text-sm font-medium text-text-primary mb-1">Title</label>
@@ -249,6 +263,10 @@
                         <label class="block text-sm font-medium text-text-primary mb-1">Time</label>
                         <input type="time" id="eventTime" class="form-input" required />
                     </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-text-primary mb-1">End Time</label>
+                    <input type="time" id="eventEndTime" class="form-input" required />
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-text-primary mb-1">Category</label>
@@ -283,13 +301,22 @@
 
         // Local Storage functions
         function saveEventsToStorage() {
-            localStorage.setItem('calendarEvents', JSON.stringify(events));
+            try {
+                localStorage.setItem('calendarEvents', JSON.stringify(events));
+            } catch (err) {
+                console.error('Failed to save events to storage', err);
+            }
         }
 
         function loadEventsFromStorage() {
-            const stored = localStorage.getItem('calendarEvents');
-            if (stored) {
-                events = JSON.parse(stored);
+            try {
+                const stored = localStorage.getItem('calendarEvents');
+                events = stored ? JSON.parse(stored) : [];
+                // Defensive: ensure events is array
+                if (!Array.isArray(events)) events = [];
+            } catch (err) {
+                console.error('Failed to load events from storage', err);
+                events = [];
             }
         }
 
@@ -321,10 +348,13 @@
                 btn.classList.remove('active', 'bg-primary', 'text-white');
                 btn.classList.add('text-text-secondary', 'hover:text-primary');
             });
-            
-            event.target.classList.add('active', 'bg-primary', 'text-white');
-            event.target.classList.remove('text-text-secondary', 'hover:text-primary');
-            
+
+            // event may be undefined if called programmatically; guard
+            if (window.event && window.event.target) {
+                window.event.target.classList.add('active', 'bg-primary', 'text-white');
+                window.event.target.classList.remove('text-text-secondary', 'hover:text-primary');
+            }
+
             currentView = view;
             showToast(`Switched to ${view} view`, 'info');
             renderCalendar();
@@ -352,7 +382,7 @@
         function updateCurrentDateDisplay() {
             const monthNames = ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"];
-            document.getElementById('currentDate').textContent = 
+            document.getElementById('currentDate').textContent =
                 `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
         }
 
@@ -369,23 +399,23 @@
             startDate.setDate(startDate.getDate() - firstDay.getDay());
 
             const today = new Date();
-            
+
             for (let i = 0; i < 42; i++) { // 6 weeks * 7 days
                 const cellDate = new Date(startDate);
                 cellDate.setDate(startDate.getDate() + i);
-                
+
                 const cell = document.createElement('div');
                 cell.className = 'calendar-cell';
                 cell.setAttribute('ondrop', 'dropEvent(event)');
                 cell.setAttribute('ondragover', 'allowDrop(event)');
                 cell.setAttribute('ondblclick', `quickCreateEvent(event, '${formatDate(cellDate)}')`);
-                
+
                 const dayNumber = document.createElement('div');
-                dayNumber.className = cellDate.getMonth() === month 
-                    ? 'text-sm font-medium text-text-primary mb-2' 
+                dayNumber.className = cellDate.getMonth() === month
+                    ? 'text-sm font-medium text-text-primary mb-2'
                     : 'text-sm text-text-secondary mb-2';
                 dayNumber.textContent = cellDate.getDate();
-                
+
                 // Add "Today" indicator
                 if (cellDate.toDateString() === today.toDateString()) {
                     const todayIndicator = document.createElement('div');
@@ -393,23 +423,30 @@
                     todayIndicator.textContent = 'Today';
                     cell.appendChild(todayIndicator);
                 }
-                
+
                 cell.appendChild(dayNumber);
-                
+
                 // Add events for this date
                 const dateEvents = getEventsForDate(cellDate);
                 dateEvents.forEach(event => {
                     const eventElement = createEventElement(event);
                     cell.appendChild(eventElement);
                 });
-                
+
                 calendarGrid.appendChild(cell);
             }
-            
+
             updateCategoryCounts();
         }
 
         function formatDate(date) {
+            // Accept Date objects or ISO/date-only strings
+            if (typeof date === 'string') {
+                const d = new Date(date);
+                if (!isNaN(d)) return d.toISOString().split('T')[0];
+                // fallback for date-only 'YYYY-MM-DD'
+                return date.split('T')[0];
+            }
             return date.toISOString().split('T')[0];
         }
 
@@ -426,13 +463,39 @@
             eventDiv.setAttribute('ondragstart', 'dragEvent(event)');
             eventDiv.setAttribute('onclick', `editEvent('${event.id}')`);
             eventDiv.setAttribute('data-event-id', event.id);
-            
+
+            // Defensive: make sure time and title exist
+            const safeTitle = event.title || '(No title)';
+            const safeTime = event.time || '';
+            const safeEndTime = event.endTime || '';
+            const timeDisplay = safeEndTime ? `${safeTime} - ${safeEndTime}` : safeTime;
+
             eventDiv.innerHTML = `
-                <span class="text-xs font-medium">${event.title}</span>
-                <div class="text-xs opacity-75">${event.time}</div>
+                <span class="text-xs font-medium">${safeTitle}</span>
+                <div class="text-xs opacity-75">${timeDisplay}</div>
             `;
-            
+
             return eventDiv;
+        }
+
+        // QUICK HELPERS & CONFLICT CHECKING (NEW/UPDATED)
+
+        /**
+         * hasTimeConflict(date, time, ignoreEventId = null)
+         * Checks whether any existing event uses the exact same date + time.
+         * If ignoreEventId is provided, that event id will be ignored (useful when editing).
+         */
+        function hasTimeConflict(date, time, ignoreEventId = null) {
+            if (!date || !time) return false;
+            const normalizedDate = date.toString().trim();
+            const normalizedTime = time.toString().trim();
+            return events.some(e => {
+                if (!e) return false;
+                if (ignoreEventId && e.id === ignoreEventId) return false;
+                // defensive: ignore events with missing date/time
+                if (!e.date || !e.time) return false;
+                return e.date.toString().trim() === normalizedDate && e.time.toString().trim() === normalizedTime;
+            });
         }
 
         // Quick event creation
@@ -443,9 +506,10 @@
             document.getElementById('eventTitle').value = '';
             document.getElementById('eventDate').value = date;
             document.getElementById('eventTime').value = '09:00';
+            document.getElementById('eventEndTime').value = '10:00';
             document.getElementById('eventCategory').value = 'work';
             document.getElementById('eventDescription').value = '';
-            
+
             modal.classList.remove('hidden');
             setTimeout(() => {
                 document.querySelector('.modal-content').classList.add('show');
@@ -454,52 +518,76 @@
 
         function createQuickEvent(event) {
             event.preventDefault();
-            const title = document.getElementById('quickEventTitle').value;
-            const date = document.getElementById('quickEventDate').value;
-            const time = document.getElementById('quickEventTime').value;
-            const category = document.getElementById('quickEventCategory').value;
-            
-            if (!title || !date || !time) {
+
+            const titleEl = document.getElementById('quickEventTitle');
+            const dateEl = document.getElementById('quickEventDate');
+            const timeEl = document.getElementById('quickEventTime');
+            const endTimeEl = document.getElementById('quickEventEndTime');
+            const categoryEl = document.getElementById('quickEventCategory');
+
+            const title = titleEl.value && titleEl.value.trim();
+            const date = dateEl.value && dateEl.value.trim();
+            const time = timeEl.value && timeEl.value.trim();
+            const endTime = endTimeEl.value && endTimeEl.value.trim();
+            const category = categoryEl.value && categoryEl.value.trim();
+
+            if (!title || !date || !time || !endTime) {
                 showToast('Please fill in all required fields', 'error');
                 return;
             }
-            
+
+            // Validate time order
+            if (time >= endTime) {
+                alert('⚠️ Invalid Time\n\nEnd time must be after start time.\n\nPlease adjust the times and try again.');
+                return;
+            }
+
+            // Conflict check (same date + same time)
+            if (hasTimeConflict(date, time)) {
+                if (!confirm('There is already an event at this time. Do you want to create this event anyway?')) {
+                    return;
+                }
+            }
+
             const newEvent = {
                 id: generateEventId(),
                 title: title,
                 date: date,
                 time: time,
+                endTime: endTime,
                 category: category,
                 description: ''
             };
-            
+
             events.push(newEvent);
             saveEventsToStorage();
             renderCalendar();
-            loadUpcomingTasks();
-            
+            loadUpcomingTasks(); // keep tasks refreshed (no UI change)
+
             // Reset form
-            document.getElementById('quickEventTitle').value = '';
-            document.getElementById('quickEventDate').value = '';
-            document.getElementById('quickEventTime').value = '';
-            document.getElementById('quickEventCategory').value = 'work';
-            
+            titleEl.value = '';
+            dateEl.value = '';
+            timeEl.value = '';
+            endTimeEl.value = '';
+            categoryEl.value = 'work';
+
             showToast('Event created successfully!', 'success');
         }
 
         // Event editing
         function editEvent(eventId) {
-            const event = events.find(e => e.id === eventId);
-            if (!event) return;
-            
+            const ev = events.find(e => e.id === eventId);
+            if (!ev) return;
+
             editingEventId = eventId;
             document.getElementById('editEventId').value = eventId;
-            document.getElementById('eventTitle').value = event.title;
-            document.getElementById('eventDate').value = event.date;
-            document.getElementById('eventTime').value = event.time;
-            document.getElementById('eventCategory').value = event.category;
-            document.getElementById('eventDescription').value = event.description || '';
-            
+            document.getElementById('eventTitle').value = ev.title || '';
+            document.getElementById('eventDate').value = ev.date || '';
+            document.getElementById('eventTime').value = ev.time || '';
+            document.getElementById('eventEndTime').value = ev.endTime || '';
+            document.getElementById('eventCategory').value = ev.category || 'work';
+            document.getElementById('eventDescription').value = ev.description || '';
+
             document.getElementById('eventModal').classList.remove('hidden');
             setTimeout(() => {
                 document.querySelector('.modal-content').classList.add('show');
@@ -509,40 +597,68 @@
         function saveEventModal(event) {
             event.preventDefault();
             const eventId = document.getElementById('editEventId').value;
-            const title = document.getElementById('eventTitle').value;
-            const date = document.getElementById('eventDate').value;
-            const time = document.getElementById('eventTime').value;
-            const category = document.getElementById('eventCategory').value;
-            const description = document.getElementById('eventDescription').value;
-            
+            const title = document.getElementById('eventTitle').value && document.getElementById('eventTitle').value.trim();
+            const date = document.getElementById('eventDate').value && document.getElementById('eventDate').value.trim();
+            const time = document.getElementById('eventTime').value && document.getElementById('eventTime').value.trim();
+            const endTime = document.getElementById('eventEndTime').value && document.getElementById('eventEndTime').value.trim();
+            const category = document.getElementById('eventCategory').value && document.getElementById('eventCategory').value.trim();
+            const description = document.getElementById('eventDescription').value || '';
+
+            if (!title || !date || !time || !endTime) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Validate time order
+            if (time >= endTime) {
+                alert('⚠️ Invalid Time\n\nEnd time must be after start time.\n\nPlease adjust the times and try again.');
+                return;
+            }
+
+            // If updating existing event
             if (eventId) {
-                // Update existing event
                 const eventIndex = events.findIndex(e => e.id === eventId);
                 if (eventIndex !== -1) {
+                    // Conflict check ignoring the event being edited
+                    if (hasTimeConflict(date, time, eventId)) {
+                        if (!confirm('There is already an event at this time. Do you want to update this event anyway?')) {
+                            return;
+                        }
+                    }
+
                     events[eventIndex] = {
                         ...events[eventIndex],
-                        title: title,
-                        date: date,
-                        time: time,
-                        category: category,
-                        description: description
+                        title,
+                        date,
+                        time,
+                        endTime,
+                        category,
+                        description
                     };
                     showToast('Event updated successfully!', 'success');
                 }
             } else {
-                // Create new event
+                // Creating new event from modal
+                // Conflict check
+                if (hasTimeConflict(date, time)) {
+                    if (!confirm('There is already an event at this time. Do you want to create this event anyway?')) {
+                        return;
+                    }
+                }
+
                 const newEvent = {
                     id: generateEventId(),
-                    title: title,
-                    date: date,
-                    time: time,
-                    category: category,
-                    description: description
+                    title,
+                    date,
+                    time,
+                    endTime,
+                    category,
+                    description
                 };
                 events.push(newEvent);
                 showToast('Event created successfully!', 'success');
             }
-            
+
             saveEventsToStorage();
             renderCalendar();
             loadUpcomingTasks();
@@ -552,7 +668,7 @@
         function deleteEventFromModal() {
             const eventId = document.getElementById('editEventId').value;
             if (!eventId) return;
-            
+
             if (confirm('Are you sure you want to delete this event?')) {
                 events = events.filter(e => e.id !== eventId);
                 saveEventsToStorage();
@@ -565,11 +681,19 @@
 
         function closeModal(event) {
             if (event && event.target !== event.currentTarget) return;
-            
+
             document.querySelector('.modal-content').classList.remove('show');
             setTimeout(() => {
                 document.getElementById('eventModal').classList.add('hidden');
             }, 300);
+        }
+
+        function handleModalKeydown(event) {
+            // Submit form when Enter is pressed (except in textarea)
+            if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
+                event.preventDefault();
+                saveEventModal(event);
+            }
         }
 
         // Drag and drop functionality
@@ -587,37 +711,51 @@
         function dropEvent(event) {
             event.preventDefault();
             event.currentTarget.classList.remove('drop-zone', 'active');
-            
+
             const eventId = event.dataTransfer.getData('text/plain');
             const eventObj = events.find(e => e.id === eventId);
             if (!eventObj) return;
-            
+
             // Get the target date from the calendar cell
             const cell = event.currentTarget;
             const dayElement = cell.querySelector('.text-text-primary, .text-text-secondary');
             if (!dayElement) return;
-            
+
             const day = parseInt(dayElement.textContent);
             const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-            
+            const newDateStr = formatDate(newDate);
+
+            // Conflict: if target date + existing time slot already taken by another event (not this one), ask user
+            if (hasTimeConflict(newDateStr, eventObj.time, eventObj.id)) {
+                if (!confirm('There is already an event at this time on this day. Do you want to reschedule anyway?')) {
+                    renderCalendar(); // Re-render to reset the dragged event position
+                    return;
+                }
+            }
+
             // Update event date
-            eventObj.date = formatDate(newDate);
+            eventObj.date = newDateStr;
             saveEventsToStorage();
             renderCalendar();
-            
+
             showToast('Event rescheduled successfully', 'success');
         }
 
         // Category filtering
         function filterEventsByCategory() {
-            const checkedCategories = Array.from(document.querySelectorAll('.category-filter:checked'))
+            // If no category checkboxes are present, just return
+            const checkboxes = document.querySelectorAll('.category-filter');
+            if (!checkboxes || checkboxes.length === 0) return;
+
+            const checkedCategories = Array.from(checkboxes)
+                .filter(cb => cb.checked)
                 .map(cb => cb.dataset.category);
-            
+
             // Hide/show events based on category filters
             document.querySelectorAll('.event-item').forEach(eventElement => {
                 const eventId = eventElement.getAttribute('data-event-id');
-                const event = events.find(e => e.id === eventId);
-                if (event && checkedCategories.includes(event.category)) {
+                const ev = events.find(e => e.id === eventId);
+                if (ev && checkedCategories.includes(ev.category)) {
                     eventElement.style.display = 'block';
                 } else {
                     eventElement.style.display = 'none';
@@ -632,7 +770,7 @@
                 health: events.filter(e => e.category === 'health').length,
                 social: events.filter(e => e.category === 'social').length
             };
-            
+
             Object.entries(categoryCounts).forEach(([category, count]) => {
                 const countElement = document.querySelector(`.category-count[data-category="${category}"]`);
                 if (countElement) {
@@ -641,16 +779,97 @@
             });
         }
 
-        // Load upcoming tasks from localStorage
+        // -----------------------
+        // Upcoming tasks handling
+        // -----------------------
+
+        /**
+         * isValidTaskObject(task)
+         * Basic validation to ensure required fields exist to be shown in upcoming list.
+         */
+        function isValidTaskObject(task) {
+            if (!task || typeof task !== 'object') return false;
+            if (!task.title) return false;
+            if (!task.dueDate) return false;
+            // default status if missing
+            if (!task.status) task.status = 'pending';
+            return true;
+        }
+
+        /**
+         * parseDateSafe(value)
+         * Attempts to parse a date string robustly. Returns Date or null.
+         */
+        function parseDateSafe(value) {
+            if (!value) return null;
+            // If it's already a Date
+            if (value instanceof Date) {
+                if (isNaN(value)) return null;
+                return value;
+            }
+            // If YYYY-MM-DD, treat as local midnight
+            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                const d = new Date(value + 'T00:00:00');
+                return isNaN(d) ? null : d;
+            }
+            // Try Date constructor for full ISO or other formats
+            const d = new Date(value);
+            return isNaN(d) ? null : d;
+        }
+
+        /**
+         * completeTaskFromDashboard(taskId)
+         * Marks a task as completed (saves to localStorage) and refreshes upcoming list.
+         */
+        function completeTaskFromDashboard(taskId) {
+            try {
+                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+                const idx = tasks.findIndex(t => t.id === taskId);
+                if (idx === -1) return;
+                tasks[idx].status = 'completed';
+                tasks[idx].completedAt = new Date().toISOString();
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                loadUpcomingTasks();
+                showToast('Task marked complete', 'success');
+            } catch (err) {
+                console.error('Error completing task from dashboard', err);
+                showToast('Failed to complete task', 'error');
+            }
+        }
+
+        /**
+         * loadUpcomingTasks()
+         * - Loads tasks from localStorage
+         * - Filters pending tasks with dueDate >= today
+         * - Shows up to 3 upcoming tasks
+         */
         function loadUpcomingTasks() {
             const container = document.getElementById('upcomingTasksContainer');
-            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-            
-            // Filter tasks that are pending and coming up soon
-            const upcomingTasks = tasks.filter(task => 
-                task.status === 'pending' && new Date(task.dueDate) >= new Date()
-            ).slice(0, 3); // Show only first 3
-            
+            let tasksRaw = [];
+            try {
+                tasksRaw = JSON.parse(localStorage.getItem('tasks') || '[]');
+                if (!Array.isArray(tasksRaw)) tasksRaw = [];
+            } catch (err) {
+                console.error('Failed to read tasks from storage', err);
+                tasksRaw = [];
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const upcomingTasks = tasksRaw.filter(t => {
+                if (!isValidTaskObject(t)) return false;
+                if (t.status === 'completed') return false;
+                const due = parseDateSafe(t.dueDate);
+                if (!due) return false;
+                due.setHours(0,0,0,0);
+                return due >= today;
+            }).sort((a, b) => {
+                const da = parseDateSafe(a.dueDate) || new Date(0);
+                const db = parseDateSafe(b.dueDate) || new Date(0);
+                return da - db;
+            }).slice(0, 3);
+
             if (upcomingTasks.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-4">
@@ -660,42 +879,62 @@
                 `;
                 return;
             }
-            
+
             container.innerHTML = upcomingTasks.map(task => {
-                const priorityClass = task.priority === 'high' ? 'bg-error-100' : 
+                const priorityClass = task.priority === 'high' ? 'bg-error-100' :
                                    task.priority === 'medium' ? 'bg-warning-100' : 'bg-success-100';
-                const priorityTextClass = task.priority === 'high' ? 'text-error-600' : 
+                const priorityTextClass = task.priority === 'high' ? 'text-error-600' :
                                         task.priority === 'medium' ? 'text-warning-600' : 'text-success-600';
-                
+
+                // ensure id exists (generate fallback to avoid DOM collisions)
+                const tid = task.id || ('t_' + (Date.now().toString(36) + Math.random().toString(36).substr(2,5)));
+
                 return `
                     <div class="flex items-center space-x-3 p-3 ${priorityClass} rounded-lg">
-                        <input type="checkbox" class="w-4 h-4 text-primary" />
+                        <input type="checkbox" class="w-4 h-4 text-primary" onchange="completeTaskFromDashboard('${tid}')" ${task.status === 'completed' ? 'checked' : ''} />
                         <div class="flex-1">
-                            <p class="text-sm font-medium text-text-primary">${task.title}</p>
-                            <p class="text-xs ${priorityTextClass}">Due: ${new Date(task.dueDate).toLocaleDateString()}</p>
+                            <p class="text-sm font-medium text-text-primary">${(task.title || '').replace(/</g, "&lt;")}</p>
+                            <p class="text-xs ${priorityTextClass}">Due: ${(() => {
+                                const d = parseDateSafe(task.dueDate);
+                                return d ? d.toLocaleDateString() : task.dueDate;
+                            })()}</p>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
+        // Storage listener: if tasks/events changed in other tabs, refresh UI
+        window.addEventListener('storage', function(e) {
+            if (!e) return;
+            if (e.key === 'calendarEvents') {
+                loadEventsFromStorage();
+                renderCalendar();
+            }
+            if (e.key === 'tasks') {
+                loadUpcomingTasks();
+            }
+        });
+
         // Toast notifications
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toastIcon');
             const messageEl = document.getElementById('toastMessage');
-            
+
+            if (!toast || !messageEl || !icon) return;
+
             messageEl.textContent = message;
-            
+
             // Set icon based on type
             icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
                            type === 'error' ? 'fas fa-exclamation-circle text-error' :
                            'fas fa-info-circle text-accent';
-            
+
             // Show toast
             toast.classList.remove('translate-x-full');
             toast.classList.add('translate-x-0');
-            
+
             setTimeout(() => {
                 hideToast();
             }, 3000);
@@ -703,18 +942,90 @@
 
         function hideToast() {
             const toast = document.getElementById('toast');
+            if (!toast) return;
             toast.classList.remove('translate-x-0');
             toast.classList.add('translate-x-full');
+        }
+
+        // Import/Export functions
+        function exportData() {
+            try {
+                // Get all events and tasks
+                const eventsData = localStorage.getItem('calendarEvents');
+                const tasksData = localStorage.getItem('tasks');
+                
+                const exportObj = {
+                    events: eventsData ? JSON.parse(eventsData) : [],
+                    tasks: tasksData ? JSON.parse(tasksData) : [],
+                    exportDate: new Date().toISOString(),
+                    version: '1.0'
+                };
+
+                // Create download
+                const dataStr = JSON.stringify(exportObj, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `calendar-backup-${new Date().toISOString().split('T')[0]}.json`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                showToast('Data exported successfully!', 'success');
+            } catch (err) {
+                console.error('Export failed', err);
+                showToast('Failed to export data', 'error');
+            }
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importObj = JSON.parse(e.target.result);
+                    
+                    // Validate structure
+                    if (!importObj.events || !importObj.tasks) {
+                        showToast('Invalid file format', 'error');
+                        return;
+                    }
+
+                    // Confirm before overwriting
+                    if (!confirm('This will replace all current events and tasks. Continue?')) {
+                        return;
+                    }
+
+                    // Import data
+                    localStorage.setItem('calendarEvents', JSON.stringify(importObj.events));
+                    localStorage.setItem('tasks', JSON.stringify(importObj.tasks));
+                    
+                    // Reload UI
+                    loadEventsFromStorage();
+                    renderCalendar();
+                    loadUpcomingTasks();
+
+                    showToast(`Imported ${importObj.events.length} events and ${importObj.tasks.length} tasks`, 'success');
+                } catch (err) {
+                    console.error('Import failed', err);
+                    showToast('Failed to import data - invalid JSON', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
         }
 
         // Keyboard shortcuts
         document.addEventListener('keydown', function(event) {
             if (event.ctrlKey || event.metaKey) {
                 switch(event.key) {
-                    case 'n':
-                        event.preventDefault();
-                        window.location.href = 'event_creation.html';
-                        break;
                     case 't':
                         event.preventDefault();
                         window.location.href = 'task_management.html';
@@ -725,7 +1036,7 @@
                         break;
                 }
             }
-            
+
             if (event.key === 'Escape') {
                 closeModal();
             }
@@ -737,15 +1048,16 @@
             updateCurrentDateDisplay();
             renderCalendar();
             loadUpcomingTasks();
-            
+
             // Set default date for quick event form to today
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('quickEventDate').value = today;
-            
+            const quickDateEl = document.getElementById('quickEventDate');
+            if (quickDateEl) quickDateEl.value = today;
+
             // Set initial view
             const monthBtn = document.querySelector('.view-btn');
-            monthBtn.classList.add('active', 'bg-primary', 'text-white');
-            
+            if (monthBtn) monthBtn.classList.add('active', 'bg-primary', 'text-white');
+
             // Add event listeners for drag and drop cleanup
             document.addEventListener('dragend', function(event) {
                 document.querySelectorAll('.event-item').forEach(eventElement => {
@@ -754,6 +1066,13 @@
                 document.querySelectorAll('.drop-zone').forEach(zone => {
                     zone.classList.remove('drop-zone', 'active');
                 });
+            });
+
+            // Defensive: re-render when we get focus in case other tab changed storage
+            window.addEventListener('focus', () => {
+                loadEventsFromStorage();
+                renderCalendar();
+                loadUpcomingTasks();
             });
         });
     </script>

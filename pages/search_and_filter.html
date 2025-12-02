@@ -28,9 +28,6 @@
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
-                    </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
                     </a>
@@ -53,9 +50,6 @@
                 <div class="flex flex-col space-y-2">
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -686,7 +680,7 @@
         // Result actions
         function editItem(itemId) {
             if (itemId.startsWith('event')) {
-                window.location.href = 'event_creation.html';
+                showToast('Event editing has been removed. Use the calendar dashboard to manage events.', 'info');
             } else {
                 window.location.href = 'task_management.html';
             }
