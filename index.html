@@ -8,11 +8,11 @@
   <!-- Styles -->
   <link rel="stylesheet" href="css/main.css" />
 
-  <!-- ✅ PWA: Manifest + Theme Color -->
+  <!-- PWA: Manifest + Theme Color -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#764ba2">
 
-  <!-- ✅ PWA: Icons (replace with your actual icon paths) -->
+  <!-- PWA: Icons (replace with your actual icon paths) -->
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="icon" href="icons/icon-192.png" type="image/png">
 
@@ -77,13 +77,13 @@
       window.location.href = 'pages/calendar_dashboard.html';
     }, 2000);
 
-    // ✅ PWA: Register service worker
+    // PWA: Register service worker
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function() {
         navigator.serviceWorker
           .register("sw.js")
-          .then(() => console.log("✅ Service Worker registered"))
-          .catch(err => console.log("❌ Service Worker failed", err));
+          .then(() => console.log("Service Worker registered"))
+          .catch(err => console.log("Service Worker failed", err));
       });
     }
   </script>

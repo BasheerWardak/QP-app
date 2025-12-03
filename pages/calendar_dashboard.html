@@ -6,7 +6,7 @@
     <title>Calendar Dashboard - Super Scheduler</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+<!-- <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script> -->
 </head>
 <body class="bg-background min-h-screen">
     <!-- Header Navigation -->
@@ -19,7 +19,7 @@
                         <svg class="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
                         </svg>
-                        <h1 class="text-xl font-semibold text-text-primary">Daily Reminder</h1>
+                        <h1 class="text-xl font-semibold text-text-primary">Super Scheduler</h1>
                     </div>
                 </div>
 
@@ -33,9 +33,6 @@
                     </a>
                     <a href="search_and_filter.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-search mr-2"></i>Search
-                    </a>
-                    <a href="settings_and_preferences.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-cog mr-2"></i>Settings
                     </a>
                 </nav>
 
@@ -538,7 +535,7 @@
 
             // Validate time order
             if (time >= endTime) {
-                alert('⚠️ Invalid Time\n\nEnd time must be after start time.\n\nPlease adjust the times and try again.');
+                alert('Invalid Time\n\nEnd time must be after start time.\n\nPlease adjust the times and try again.');
                 return;
             }
 
@@ -562,7 +559,6 @@
             events.push(newEvent);
             saveEventsToStorage();
             renderCalendar();
-            loadUpcomingTasks(); // keep tasks refreshed (no UI change)
 
             // Reset form
             titleEl.value = '';
@@ -611,7 +607,7 @@
 
             // Validate time order
             if (time >= endTime) {
-                alert('⚠️ Invalid Time\n\nEnd time must be after start time.\n\nPlease adjust the times and try again.');
+                alert('Invalid Time\n\nEnd time must be after start time.\n\nPlease adjust the times and try again.');
                 return;
             }
 
@@ -661,7 +657,6 @@
 
             saveEventsToStorage();
             renderCalendar();
-            loadUpcomingTasks();
             closeModal();
         }
 
@@ -673,7 +668,6 @@
                 events = events.filter(e => e.id !== eventId);
                 saveEventsToStorage();
                 renderCalendar();
-                loadUpcomingTasks();
                 showToast('Event deleted successfully', 'success');
                 closeModal();
             }
@@ -779,140 +773,12 @@
             });
         }
 
-        // -----------------------
-        // Upcoming tasks handling
-        // -----------------------
-
-        /**
-         * isValidTaskObject(task)
-         * Basic validation to ensure required fields exist to be shown in upcoming list.
-         */
-        function isValidTaskObject(task) {
-            if (!task || typeof task !== 'object') return false;
-            if (!task.title) return false;
-            if (!task.dueDate) return false;
-            // default status if missing
-            if (!task.status) task.status = 'pending';
-            return true;
-        }
-
-        /**
-         * parseDateSafe(value)
-         * Attempts to parse a date string robustly. Returns Date or null.
-         */
-        function parseDateSafe(value) {
-            if (!value) return null;
-            // If it's already a Date
-            if (value instanceof Date) {
-                if (isNaN(value)) return null;
-                return value;
-            }
-            // If YYYY-MM-DD, treat as local midnight
-            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-                const d = new Date(value + 'T00:00:00');
-                return isNaN(d) ? null : d;
-            }
-            // Try Date constructor for full ISO or other formats
-            const d = new Date(value);
-            return isNaN(d) ? null : d;
-        }
-
-        /**
-         * completeTaskFromDashboard(taskId)
-         * Marks a task as completed (saves to localStorage) and refreshes upcoming list.
-         */
-        function completeTaskFromDashboard(taskId) {
-            try {
-                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-                const idx = tasks.findIndex(t => t.id === taskId);
-                if (idx === -1) return;
-                tasks[idx].status = 'completed';
-                tasks[idx].completedAt = new Date().toISOString();
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                loadUpcomingTasks();
-                showToast('Task marked complete', 'success');
-            } catch (err) {
-                console.error('Error completing task from dashboard', err);
-                showToast('Failed to complete task', 'error');
-            }
-        }
-
-        /**
-         * loadUpcomingTasks()
-         * - Loads tasks from localStorage
-         * - Filters pending tasks with dueDate >= today
-         * - Shows up to 3 upcoming tasks
-         */
-        function loadUpcomingTasks() {
-            const container = document.getElementById('upcomingTasksContainer');
-            let tasksRaw = [];
-            try {
-                tasksRaw = JSON.parse(localStorage.getItem('tasks') || '[]');
-                if (!Array.isArray(tasksRaw)) tasksRaw = [];
-            } catch (err) {
-                console.error('Failed to read tasks from storage', err);
-                tasksRaw = [];
-            }
-
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const upcomingTasks = tasksRaw.filter(t => {
-                if (!isValidTaskObject(t)) return false;
-                if (t.status === 'completed') return false;
-                const due = parseDateSafe(t.dueDate);
-                if (!due) return false;
-                due.setHours(0,0,0,0);
-                return due >= today;
-            }).sort((a, b) => {
-                const da = parseDateSafe(a.dueDate) || new Date(0);
-                const db = parseDateSafe(b.dueDate) || new Date(0);
-                return da - db;
-            }).slice(0, 3);
-
-            if (upcomingTasks.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-4">
-                        <p class="text-sm text-text-secondary">No upcoming tasks</p>
-                        <a href="task_management.html" class="text-xs text-primary hover:text-primary-700">Create your first task</a>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = upcomingTasks.map(task => {
-                const priorityClass = task.priority === 'high' ? 'bg-error-100' :
-                                   task.priority === 'medium' ? 'bg-warning-100' : 'bg-success-100';
-                const priorityTextClass = task.priority === 'high' ? 'text-error-600' :
-                                        task.priority === 'medium' ? 'text-warning-600' : 'text-success-600';
-
-                // ensure id exists (generate fallback to avoid DOM collisions)
-                const tid = task.id || ('t_' + (Date.now().toString(36) + Math.random().toString(36).substr(2,5)));
-
-                return `
-                    <div class="flex items-center space-x-3 p-3 ${priorityClass} rounded-lg">
-                        <input type="checkbox" class="w-4 h-4 text-primary" onchange="completeTaskFromDashboard('${tid}')" ${task.status === 'completed' ? 'checked' : ''} />
-                        <div class="flex-1">
-                            <p class="text-sm font-medium text-text-primary">${(task.title || '').replace(/</g, "&lt;")}</p>
-                            <p class="text-xs ${priorityTextClass}">Due: ${(() => {
-                                const d = parseDateSafe(task.dueDate);
-                                return d ? d.toLocaleDateString() : task.dueDate;
-                            })()}</p>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
         // Storage listener: if tasks/events changed in other tabs, refresh UI
         window.addEventListener('storage', function(e) {
             if (!e) return;
             if (e.key === 'calendarEvents') {
                 loadEventsFromStorage();
                 renderCalendar();
-            }
-            if (e.key === 'tasks') {
-                loadUpcomingTasks();
             }
         });
 
@@ -1008,7 +874,6 @@
                     // Reload UI
                     loadEventsFromStorage();
                     renderCalendar();
-                    loadUpcomingTasks();
 
                     showToast(`Imported ${importObj.events.length} events and ${importObj.tasks.length} tasks`, 'success');
                 } catch (err) {
@@ -1047,7 +912,6 @@
             loadEventsFromStorage();
             updateCurrentDateDisplay();
             renderCalendar();
-            loadUpcomingTasks();
 
             // Set default date for quick event form to today
             const today = new Date().toISOString().split('T')[0];
@@ -1072,10 +936,8 @@
             window.addEventListener('focus', () => {
                 loadEventsFromStorage();
                 renderCalendar();
-                loadUpcomingTasks();
             });
         });
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>

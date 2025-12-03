@@ -1,12 +1,13 @@
 // sw.js
 const CACHE_NAME = "super-scheduler-v1";
 const FILES_TO_CACHE = [
-  "/QP-app/",
-  "/QP-app/index.html",
-  "/QP-app/css/main.css",
-  "/QP-app/pages/calendar_dashboard.html",
-  "/QP-app/icons/icon-192.png",
-  "/QP-app/icons/icon-512.png"
+  "./",
+  "./index.html",
+  "./css/main.css",
+  "./pages/calendar_dashboard.html",
+  "./pages/task_management.html",
+  "./pages/search_and_filter.html",
+  "./pages/settings_and_preferences.html"
 ];
 
 // Install: cache files

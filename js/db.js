@@ -43,12 +43,12 @@ class SchedulerDatabase {
       
       request.onsuccess = (event) => {
         this.db = event.target.result;
-        console.log('✅ Database initialized successfully');
+        console.log('Database initialized successfully');
         this.initDefaultData().then(resolve).catch(reject);
       };
       
       request.onerror = (event) => {
-        console.error('❌ Database initialization error:', event.target.error);
+        console.error('Database initialization error:', event.target.error);
         reject(event.target.error);
       };
     });
@@ -230,11 +230,6 @@ class SchedulerDatabase {
     return d;
   }
 
-  /**
-   * getUpcomingTasks(days = 7)
-   * Returns tasks due from today (inclusive) to today + days (inclusive), excluding completed.
-   * Normalizes dates to start-of-day/end-of-day so tasks with date-only strings are included properly.
-   */
   async getUpcomingTasks(days = 7) {
     // Start of today (local)
     const todayStart = new Date();
