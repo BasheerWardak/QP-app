@@ -6,7 +6,7 @@
     <title>Settings and Preferences - Super Scheduler</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
 </head>
 <body class="bg-background min-h-screen">
     <!-- Header Navigation -->
@@ -23,13 +23,10 @@
                     </div>
                 </div>
 
-                <!-- Navigation Menu -->
+                <!-- Navigation Menu (no Create Event) -->
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -48,14 +45,11 @@
                 </button>
             </div>
 
-            <!-- Mobile Navigation Menu -->
+            <!-- Mobile Navigation Menu (no Create Event) -->
             <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 py-4">
                 <div class="flex flex-col space-y-2">
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -85,19 +79,13 @@
                 <div class="card p-6">
                     <h3 class="text-lg font-semibold text-text-primary mb-4">Settings Menu</h3>
                     <nav class="space-y-2">
-                        <button onclick="showSection('display')" class="settings-nav-btn active w-full text-left px-3 py-2 rounded-md transition-colors">
+                        <button onclick="showSection('display', this)" class="settings-nav-btn active w-full text-left px-3 py-2 rounded-md transition-colors">
                             <i class="fas fa-desktop mr-3"></i>Display Settings
                         </button>
-                        <button onclick="showSection('notifications')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
+                        <button onclick="showSection('notifications', this)" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
                             <i class="fas fa-bell mr-3"></i>Notifications
                         </button>
-                        <button onclick="showSection('accessibility')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
-                            <i class="fas fa-universal-access mr-3"></i>Accessibility
-                        </button>
-                        <button onclick="showSection('categories')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
-                            <i class="fas fa-tags mr-3"></i>Categories
-                        </button>
-                        <button onclick="showSection('data')" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
+                        <button onclick="showSection('data', this)" class="settings-nav-btn w-full text-left px-3 py-2 rounded-md transition-colors">
                             <i class="fas fa-database mr-3"></i>Data Management
                         </button>
                     </nav>
@@ -134,99 +122,25 @@
                         </h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Time Format -->
+                            <!-- Time Format Only -->
                             <div>
                                 <label class="block text-sm font-medium text-text-primary mb-3">Time Format</label>
                                 <div class="space-y-2">
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="timeFormat" value="12" checked class="w-4 h-4 text-primary" onchange="saveSettings()" />
+                                        <input type="radio" name="timeFormat" value="12" class="w-4 h-4 text-primary" />
                                         <span class="text-sm text-text-primary">12-hour (2:30 PM)</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="radio" name="timeFormat" value="24" class="w-4 h-4 text-primary" onchange="saveSettings()" />
+                                        <input type="radio" name="timeFormat" value="24" class="w-4 h-4 text-primary" />
                                         <span class="text-sm text-text-primary">24-hour (14:30)</span>
                                     </label>
                                 </div>
                             </div>
 
-                            <!-- Week Start Day -->
-                            <div>
-                                <label class="block text-sm font-medium text-text-primary mb-3">Week Starts On</label>
-                                <select class="form-input" id="weekStart" onchange="saveSettings()">
-                                    <option value="sunday" selected>Sunday</option>
-                                    <option value="monday">Monday</option>
-                                    <option value="saturday">Saturday</option>
-                                </select>
-                            </div>
-
-                            <!-- Date Format -->
-                            <div>
-                                <label class="block text-sm font-medium text-text-primary mb-3">Date Format</label>
-                                <select class="form-input" id="dateFormat" onchange="saveSettings()">
-                                    <option value="mm/dd/yyyy" selected>MM/DD/YYYY</option>
-                                    <option value="dd/mm/yyyy">DD/MM/YYYY</option>
-                                    <option value="yyyy-mm-dd">YYYY-MM-DD</option>
-                                </select>
-                            </div>
-
-                            <!-- Default View -->
-                            <div>
-                                <label class="block text-sm font-medium text-text-primary mb-3">Default Calendar View</label>
-                                <select class="form-input" id="defaultView" onchange="saveSettings()">
-                                    <option value="month" selected>Month View</option>
-                                    <option value="week">Week View</option>
-                                    <option value="day">Day View</option>
-                                    <option value="agenda">Agenda View</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Theme Selection -->
-                        <div class="mt-8">
-                            <h4 class="text-lg font-medium text-text-primary mb-4">Theme Selection</h4>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <div class="theme-option active cursor-pointer" onclick="selectTheme('light')" data-theme="light">
-                                    <div class="w-full h-20 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg mb-3 border-2 border-primary"></div>
-                                    <div class="text-center">
-                                        <p class="text-sm font-medium text-text-primary">Light Theme</p>
-                                        <p class="text-xs text-text-secondary">Default bright theme</p>
-                                    </div>
-                                </div>
-                                <div class="theme-option cursor-pointer" onclick="selectTheme('dark')" data-theme="dark">
-                                    <div class="w-full h-20 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg mb-3 border-2 border-transparent"></div>
-                                    <div class="text-center">
-                                        <p class="text-sm font-medium text-text-primary">Dark Theme</p>
-                                        <p class="text-xs text-text-secondary">Easy on the eyes</p>
-                                    </div>
-                                </div>
-                                <div class="theme-option cursor-pointer" onclick="selectTheme('auto')" data-theme="auto">
-                                    <div class="w-full h-20 bg-gradient-to-br from-blue-100 via-slate-200 to-slate-800 rounded-lg mb-3 border-2 border-transparent"></div>
-                                    <div class="text-center">
-                                        <p class="text-sm font-medium text-text-primary">Auto Theme</p>
-                                        <p class="text-xs text-text-secondary">Follows system</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Calendar Preview -->
-                        <div class="mt-8">
-                            <h4 class="text-lg font-medium text-text-primary mb-4">Preview</h4>
-                            <div class="bg-slate-50 rounded-lg p-4 border">
-                                <div class="mini-calendar">
-                                    <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium text-text-secondary mb-2">
-                                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-                                    </div>
-                                    <div class="grid grid-cols-7 gap-1 text-center text-sm">
-                                        <div class="p-2 text-text-secondary">29</div>
-                                        <div class="p-2 text-text-primary">30</div>
-                                        <div class="p-2 text-text-primary bg-primary text-white rounded">1</div>
-                                        <div class="p-2 text-text-primary">2</div>
-                                        <div class="p-2 text-text-primary">3</div>
-                                        <div class="p-2 text-text-primary">4</div>
-                                        <div class="p-2 text-text-primary">5</div>
-                                    </div>
-                                </div>
+                            <div class="flex items-center">
+                                <p class="text-sm text-text-secondary">
+                                    Time format controls how event times are displayed in your Dashboard and calendar.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -248,7 +162,7 @@
                                     <p class="text-xs text-text-secondary">Allow desktop notifications for reminders</p>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" checked class="sr-only peer" id="browserNotifications" onchange="saveSettings()" />
+                                    <input type="checkbox" class="sr-only peer" id="browserNotifications" />
                                     <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                                 </label>
                             </div>
@@ -259,10 +173,10 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-xs font-medium text-text-secondary mb-2">Events</label>
-                                        <select class="form-input text-sm" id="eventReminder" onchange="saveSettings()">
+                                        <select class="form-input text-sm" id="eventReminder">
                                             <option value="none">No reminder</option>
                                             <option value="5">5 minutes before</option>
-                                            <option value="15" selected>15 minutes before</option>
+                                            <option value="15">15 minutes before</option>
                                             <option value="30">30 minutes before</option>
                                             <option value="60">1 hour before</option>
                                             <option value="1440">1 day before</option>
@@ -270,11 +184,11 @@
                                     </div>
                                     <div>
                                         <label class="block text-xs font-medium text-text-secondary mb-2">Tasks</label>
-                                        <select class="form-input text-sm" id="taskReminder" onchange="saveSettings()">
+                                        <select class="form-input text-sm" id="taskReminder">
                                             <option value="none">No reminder</option>
                                             <option value="5">5 minutes before</option>
                                             <option value="15">15 minutes before</option>
-                                            <option value="30" selected>30 minutes before</option>
+                                            <option value="30">30 minutes before</option>
                                             <option value="60">1 hour before</option>
                                             <option value="1440">1 day before</option>
                                         </select>
@@ -287,17 +201,17 @@
                                 <h4 class="text-sm font-medium text-text-primary mb-3">Sound Options</h4>
                                 <div class="space-y-3">
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" checked class="w-4 h-4 text-primary" id="soundEnabled" onchange="saveSettings()" />
+                                        <input type="checkbox" class="w-4 h-4 text-primary" id="soundEnabled" />
                                         <span class="text-sm text-text-primary">Play notification sound</span>
                                     </label>
                                     <div class="ml-7">
-                                        <select class="form-input text-sm w-48" id="soundType" onchange="saveSettings()">
-                                            <option value="default" selected>Default</option>
+                                        <select class="form-input text-sm w-48" id="soundType">
+                                            <option value="default">Default</option>
                                             <option value="chime">Chime</option>
                                             <option value="bell">Bell</option>
                                             <option value="ding">Ding</option>
                                         </select>
-                                        <button class="ml-2 px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded transition-colors" onclick="testSound()">
+                                        <button type="button" class="ml-2 px-3 py-1 text-xs bg-slate-100 hover:bg-slate-200 rounded transition-colors" onclick="testSound()">
                                             <i class="fas fa-play mr-1"></i>Test
                                         </button>
                                     </div>
@@ -309,130 +223,18 @@
                                 <h4 class="text-sm font-medium text-text-primary mb-3">Email Notifications</h4>
                                 <div class="space-y-3">
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" class="w-4 h-4 text-primary" id="dailyEmail" onchange="saveSettings()" />
+                                        <input type="checkbox" class="w-4 h-4 text-primary" id="dailyEmail" />
                                         <span class="text-sm text-text-primary">Daily agenda summary</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" class="w-4 h-4 text-primary" id="weeklyEmail" onchange="saveSettings()" />
+                                        <input type="checkbox" class="w-4 h-4 text-primary" id="weeklyEmail" />
                                         <span class="text-sm text-text-primary">Weekly schedule overview</span>
                                     </label>
                                     <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" class="w-4 h-4 text-primary" id="taskDeadlineEmail" onchange="saveSettings()" />
+                                        <input type="checkbox" class="w-4 h-4 text-primary" id="taskDeadlineEmail" />
                                         <span class="text-sm text-text-primary">Task deadline reminders</span>
                                     </label>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Accessibility Section -->
-                <div id="accessibilitySection" class="settings-section hidden">
-                    <div class="card p-6 mb-6">
-                        <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
-                            <i class="fas fa-universal-access text-primary mr-3"></i>
-                            Accessibility Options
-                        </h3>
-
-                        <div class="space-y-6">
-                            <!-- High Contrast -->
-                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                                <div>
-                                    <h4 class="text-sm font-medium text-text-primary">High Contrast Mode</h4>
-                                    <p class="text-xs text-text-secondary">Increase contrast for better visibility</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer" id="highContrast" onchange="saveSettings()" />
-                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                </label>
-                            </div>
-
-                            <!-- Screen Reader -->
-                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                                <div>
-                                    <h4 class="text-sm font-medium text-text-primary">Screen Reader Enhancements</h4>
-                                    <p class="text-xs text-text-secondary">Improved labels and descriptions</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" checked class="sr-only peer" id="screenReader" onchange="saveSettings()" />
-                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                </label>
-                            </div>
-
-                            <!-- Keyboard Navigation -->
-                            <div>
-                                <h4 class="text-sm font-medium text-text-primary mb-3">Keyboard Navigation</h4>
-                                <div class="space-y-3">
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" checked class="w-4 h-4 text-primary" id="keyboardShortcuts" onchange="saveSettings()" />
-                                        <span class="text-sm text-text-primary">Enable keyboard shortcuts</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" checked class="w-4 h-4 text-primary" id="focusIndicators" onchange="saveSettings()" />
-                                        <span class="text-sm text-text-primary">Show focus indicators</span>
-                                    </label>
-                                    <label class="flex items-center space-x-3 cursor-pointer">
-                                        <input type="checkbox" class="w-4 h-4 text-primary" id="skipToContent" onchange="saveSettings()" />
-                                        <span class="text-sm text-text-primary">Skip to main content link</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Font Size -->
-                            <div>
-                                <h4 class="text-sm font-medium text-text-primary mb-3">Font Size</h4>
-                                <div class="flex items-center space-x-4">
-                                    <span class="text-sm text-text-secondary">Small</span>
-                                    <input type="range" min="12" max="20" value="16" class="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" id="fontSize" onchange="saveSettings(); updateFontSizeDisplay()" />
-                                    <span class="text-sm text-text-secondary">Large</span>
-                                </div>
-                                <p class="text-xs text-text-secondary mt-2" id="fontSizeDisplay">Current size: 16px</p>
-                            </div>
-
-                            <!-- Reduced Motion -->
-                            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                                <div>
-                                    <h4 class="text-sm font-medium text-text-primary">Reduce Motion</h4>
-                                    <p class="text-xs text-text-secondary">Minimize animations and transitions</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer" id="reducedMotion" onchange="saveSettings()" />
-                                    <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-100 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Categories Section -->
-                <div id="categoriesSection" class="settings-section hidden">
-                    <div class="card p-6 mb-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-semibold text-text-primary flex items-center">
-                                <i class="fas fa-tags text-primary mr-3"></i>
-                                Event Categories
-                            </h3>
-                            <button onclick="addCategory()" class="btn-primary text-sm">
-                                <i class="fas fa-plus mr-2"></i>Add Category
-                            </button>
-                        </div>
-
-                        <div class="space-y-4" id="categoriesList">
-                            <!-- Categories will be populated by JavaScript -->
-                        </div>
-
-                        <!-- Color Palette -->
-                        <div class="mt-6">
-                            <h4 class="text-sm font-medium text-text-primary mb-3">Available Colors</h4>
-                            <div class="flex flex-wrap gap-2">
-                                <div class="w-8 h-8 bg-blue-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="blue"></div>
-                                <div class="w-8 h-8 bg-green-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="green"></div>
-                                <div class="w-8 h-8 bg-red-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="red"></div>
-                                <div class="w-8 h-8 bg-purple-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="purple"></div>
-                                <div class="w-8 h-8 bg-yellow-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="yellow"></div>
-                                <div class="w-8 h-8 bg-pink-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="pink"></div>
-                                <div class="w-8 h-8 bg-indigo-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="indigo"></div>
-                                <div class="w-8 h-8 bg-teal-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors" data-color="teal"></div>
                             </div>
                         </div>
                     </div>
@@ -512,7 +314,7 @@
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <div class="text-sm text-text-secondary">
                             <i class="fas fa-info-circle mr-2"></i>
-                            Changes are saved automatically
+                            Use Save All or Reset Section anytime.
                         </div>
                         <div class="flex space-x-3">
                             <button onclick="resetSection()" class="btn-secondary">
@@ -543,51 +345,6 @@
         </div>
     </div>
 
-    <!-- Category Modal -->
-    <div id="categoryModal" class="modal-overlay hidden" onclick="closeCategoryModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-text-primary" id="categoryModalTitle">Add Category</h3>
-                <button onclick="closeCategoryModal()" class="text-text-secondary hover:text-text-primary">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form class="space-y-4" onsubmit="saveCategoryModal(event)">
-                <input type="hidden" id="editCategoryId" />
-                <div>
-                    <label class="block text-sm font-medium text-text-primary mb-1">Category Name</label>
-                    <input type="text" id="categoryName" class="form-input" placeholder="Enter category name" required />
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-text-primary mb-1">Color</label>
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        <input type="radio" name="categoryColor" value="blue" id="color-blue" class="hidden" />
-                        <label for="color-blue" class="w-8 h-8 bg-blue-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
-                        
-                        <input type="radio" name="categoryColor" value="green" id="color-green" class="hidden" />
-                        <label for="color-green" class="w-8 h-8 bg-green-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
-                        
-                        <input type="radio" name="categoryColor" value="red" id="color-red" class="hidden" />
-                        <label for="color-red" class="w-8 h-8 bg-red-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
-                        
-                        <input type="radio" name="categoryColor" value="purple" id="color-purple" class="hidden" />
-                        <label for="color-purple" class="w-8 h-8 bg-purple-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
-                        
-                        <input type="radio" name="categoryColor" value="yellow" id="color-yellow" class="hidden" />
-                        <label for="color-yellow" class="w-8 h-8 bg-yellow-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
-                        
-                        <input type="radio" name="categoryColor" value="pink" id="color-pink" class="hidden" />
-                        <label for="color-pink" class="w-8 h-8 bg-pink-500 rounded-full cursor-pointer border-2 border-transparent hover:border-slate-300 transition-colors"></label>
-                    </div>
-                </div>
-                <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="closeCategoryModal()" class="btn-secondary">Cancel</button>
-                    <button type="submit" class="btn-primary">Save Category</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal-overlay hidden" onclick="closeConfirmModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
@@ -610,7 +367,22 @@
     <script>
         let currentSection = 'display';
         let pendingAction = null;
-        let settings = {};
+
+        const defaultSettings = {
+            timeFormat: '12',
+            browserNotifications: true,
+            eventReminder: '15',
+            taskReminder: '30',
+            soundEnabled: true,
+            soundType: 'default',
+            dailyEmail: false,
+            weeklyEmail: false,
+            taskDeadlineEmail: false
+        };
+
+        let settings = { ...defaultSettings };
+
+        // Categories kept only for data export/import counts
         let categories = [
             { id: 'work', name: 'Work', color: 'blue' },
             { id: 'personal', name: 'Personal', color: 'green' },
@@ -618,348 +390,253 @@
             { id: 'social', name: 'Social', color: 'purple' }
         ];
 
-        // Settings management
-        function loadSettings() {
-            const stored = localStorage.getItem('schedulerSettings');
-            if (stored) {
-                settings = JSON.parse(stored);
-                applySettings();
-            } else {
-                // Initialize with defaults
-                settings = {
-                    timeFormat: '12',
-                    weekStart: 'sunday',
-                    dateFormat: 'mm/dd/yyyy',
-                    defaultView: 'month',
-                    theme: 'light',
-                    browserNotifications: true,
-                    eventReminder: '15',
-                    taskReminder: '30',
-                    soundEnabled: true,
-                    soundType: 'default',
-                    dailyEmail: false,
-                    weeklyEmail: false,
-                    taskDeadlineEmail: false,
-                    highContrast: false,
-                    screenReader: true,
-                    keyboardShortcuts: true,
-                    focusIndicators: true,
-                    skipToContent: false,
-                    fontSize: '16',
-                    reducedMotion: false
-                };
-                saveSettingsToStorage();
-            }
-        }
-
-        function loadCategories() {
-            const stored = localStorage.getItem('schedulerCategories');
-            if (stored) {
-                categories = JSON.parse(stored);
-            }
-        }
-
-        function saveSettingsToStorage() {
-            localStorage.setItem('schedulerSettings', JSON.stringify(settings));
-        }
-
-        function saveCategoriesToStorage() {
-            localStorage.setItem('schedulerCategories', JSON.stringify(categories));
-        }
-
-        function applySettings() {
-            // Apply time format
-            const timeFormat = document.querySelector(`input[name="timeFormat"][value="${settings.timeFormat}"]`);
-            if (timeFormat) timeFormat.checked = true;
-            
-            // Apply other select settings
-            if (document.getElementById('weekStart')) document.getElementById('weekStart').value = settings.weekStart;
-            if (document.getElementById('dateFormat')) document.getElementById('dateFormat').value = settings.dateFormat;
-            if (document.getElementById('defaultView')) document.getElementById('defaultView').value = settings.defaultView;
-            if (document.getElementById('eventReminder')) document.getElementById('eventReminder').value = settings.eventReminder;
-            if (document.getElementById('taskReminder')) document.getElementById('taskReminder').value = settings.taskReminder;
-            if (document.getElementById('soundType')) document.getElementById('soundType').value = settings.soundType;
-            if (document.getElementById('fontSize')) document.getElementById('fontSize').value = settings.fontSize;
-            
-            // Apply checkboxes
-            const checkboxes = [
-                'browserNotifications', 'soundEnabled', 'dailyEmail', 'weeklyEmail', 
-                'taskDeadlineEmail', 'highContrast', 'screenReader', 'keyboardShortcuts', 
-                'focusIndicators', 'skipToContent', 'reducedMotion'
-            ];
-            
-            checkboxes.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.checked = settings[id] || false;
-                }
-            });
-            
-            // Apply theme
-            selectTheme(settings.theme);
-            
-            // Update font size display
-            updateFontSizeDisplay();
-        }
-
         // Mobile menu toggle
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
         }
 
-        // Section navigation
-        function showSection(section) {
-            // Hide all sections
+        // ---- Settings storage ----
+        function saveSettingsToStorage() {
+            localStorage.setItem('schedulerSettings', JSON.stringify(settings));
+        }
+
+        function loadSettings() {
+            try {
+                const stored = localStorage.getItem('schedulerSettings');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    settings = { ...defaultSettings, ...parsed };
+                } else {
+                    settings = { ...defaultSettings };
+                    saveSettingsToStorage();
+                }
+            } catch (e) {
+                console.error('Failed to load settings', e);
+                settings = { ...defaultSettings };
+            }
+            applySettings();
+        }
+
+        function applySettings() {
+            // Time format
+            const tfRadio = document.querySelector(`input[name="timeFormat"][value="${settings.timeFormat}"]`);
+            if (tfRadio) tfRadio.checked = true;
+            else {
+                // default to 12h if missing
+                const fallback = document.querySelector('input[name="timeFormat"][value="12"]');
+                if (fallback) fallback.checked = true;
+            }
+
+            // Notifications & reminder selects
+            const browserNotificationsEl = document.getElementById('browserNotifications');
+            const eventReminderEl = document.getElementById('eventReminder');
+            const taskReminderEl = document.getElementById('taskReminder');
+            const soundEnabledEl = document.getElementById('soundEnabled');
+            const soundTypeEl = document.getElementById('soundType');
+            const dailyEmailEl = document.getElementById('dailyEmail');
+            const weeklyEmailEl = document.getElementById('weeklyEmail');
+            const taskDeadlineEmailEl = document.getElementById('taskDeadlineEmail');
+
+            if (browserNotificationsEl) browserNotificationsEl.checked = !!settings.browserNotifications;
+            if (eventReminderEl) eventReminderEl.value = settings.eventReminder;
+            if (taskReminderEl) taskReminderEl.value = settings.taskReminder;
+            if (soundEnabledEl) soundEnabledEl.checked = !!settings.soundEnabled;
+            if (soundTypeEl) soundTypeEl.value = settings.soundType;
+            if (dailyEmailEl) dailyEmailEl.checked = !!settings.dailyEmail;
+            if (weeklyEmailEl) weeklyEmailEl.checked = !!settings.weeklyEmail;
+            if (taskDeadlineEmailEl) taskDeadlineEmailEl.checked = !!settings.taskDeadlineEmail;
+
+            updateStorageInfo();
+        }
+
+        function saveSettings(showToastMsg = true) {
+            const tf = document.querySelector('input[name="timeFormat"]:checked');
+            settings.timeFormat = tf ? tf.value : defaultSettings.timeFormat;
+
+            const browserNotificationsEl = document.getElementById('browserNotifications');
+            const eventReminderEl = document.getElementById('eventReminder');
+            const taskReminderEl = document.getElementById('taskReminder');
+            const soundEnabledEl = document.getElementById('soundEnabled');
+            const soundTypeEl = document.getElementById('soundType');
+            const dailyEmailEl = document.getElementById('dailyEmail');
+            const weeklyEmailEl = document.getElementById('weeklyEmail');
+            const taskDeadlineEmailEl = document.getElementById('taskDeadlineEmail');
+
+            if (browserNotificationsEl) settings.browserNotifications = browserNotificationsEl.checked;
+            if (eventReminderEl) settings.eventReminder = eventReminderEl.value;
+            if (taskReminderEl) settings.taskReminder = taskReminderEl.value;
+            if (soundEnabledEl) settings.soundEnabled = soundEnabledEl.checked;
+            if (soundTypeEl) settings.soundType = soundTypeEl.value;
+            if (dailyEmailEl) settings.dailyEmail = dailyEmailEl.checked;
+            if (weeklyEmailEl) settings.weeklyEmail = weeklyEmailEl.checked;
+            if (taskDeadlineEmailEl) settings.taskDeadlineEmail = taskDeadlineEmailEl.checked;
+
+            saveSettingsToStorage();
+
+            if (showToastMsg) {
+                showToast('Settings saved successfully!', 'success');
+            }
+        }
+
+        function saveAllSettings() {
+            saveSettings(true);
+        }
+
+        // ---- Section navigation ----
+        function showSection(section, btn) {
             document.querySelectorAll('.settings-section').forEach(sec => {
                 sec.classList.add('hidden');
             });
-            
-            // Show selected section
-            document.getElementById(section + 'Section').classList.remove('hidden');
-            
-            // Update navigation
-            document.querySelectorAll('.settings-nav-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
+            const sectionEl = document.getElementById(section + 'Section');
+            if (sectionEl) sectionEl.classList.remove('hidden');
+
+            document.querySelectorAll('.settings-nav-btn').forEach(b => {
+                b.classList.remove('active', 'bg-primary', 'text-white');
+                b.classList.add('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
             });
-            
-            event.target.classList.add('active', 'bg-primary', 'text-white');
-            event.target.classList.remove('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
-            
+
+            if (btn) {
+                btn.classList.add('active', 'bg-primary', 'text-white');
+                btn.classList.remove('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
+            }
+
             currentSection = section;
-            
-            if (section === 'categories') {
-                renderCategories();
-            } else if (section === 'data') {
+
+            if (section === 'data') {
                 updateStorageInfo();
             }
         }
 
-        // Theme selection
-        function selectTheme(theme) {
-            document.querySelectorAll('.theme-option').forEach(option => {
-                option.classList.remove('active');
-                option.querySelector('div').classList.remove('border-primary');
-                option.querySelector('div').classList.add('border-transparent');
-            });
-            
-            const selectedTheme = document.querySelector(`[data-theme="${theme}"]`);
-            if (selectedTheme) {
-                selectedTheme.classList.add('active');
-                selectedTheme.querySelector('div').classList.add('border-primary');
-                selectedTheme.querySelector('div').classList.remove('border-transparent');
-            }
-            
-            settings.theme = theme;
-            saveSettingsToStorage();
-            showToast(`${theme.charAt(0).toUpperCase() + theme.slice(1)} theme selected`, 'success');
-        }
-
-        // Settings saving
-        function saveSettings() {
-            // Collect all form values
-            const timeFormat = document.querySelector('input[name="timeFormat"]:checked');
-            if (timeFormat) settings.timeFormat = timeFormat.value;
-            
-            const formElements = [
-                'weekStart', 'dateFormat', 'defaultView', 'eventReminder', 
-                'taskReminder', 'soundType', 'fontSize'
-            ];
-            
-            formElements.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    settings[id] = element.value;
-                }
-            });
-            
-            const checkboxes = [
-                'browserNotifications', 'soundEnabled', 'dailyEmail', 'weeklyEmail', 
-                'taskDeadlineEmail', 'highContrast', 'screenReader', 'keyboardShortcuts', 
-                'focusIndicators', 'skipToContent', 'reducedMotion'
-            ];
-            
-            checkboxes.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    settings[id] = element.checked;
-                }
-            });
-            
-            saveSettingsToStorage();
-            showToast('Settings saved successfully!', 'success');
-        }
-
-        function saveAllSettings() {
-            saveSettings();
-            showToast('All settings saved successfully!', 'success');
-        }
-
-        function updateFontSizeDisplay() {
-            const fontSize = document.getElementById('fontSize');
-            const display = document.getElementById('fontSizeDisplay');
-            if (fontSize && display) {
-                display.textContent = `Current size: ${fontSize.value}px`;
-            }
-        }
-
-        function testSound() {
-            showToast('Sound test - ding!', 'info');
-        }
-
-        // Category management
-        function renderCategories() {
-            const container = document.getElementById('categoriesList');
-            if (!container) return;
-            
-            const events = JSON.parse(localStorage.getItem('calendarEvents') || '[]');
-            
-            container.innerHTML = categories.map(category => {
-                const eventCount = events.filter(e => e.category === category.id).length;
-                const colorClass = `bg-${category.color}-500`;
-                
-                return `
-                    <div class="category-item flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-4 h-4 ${colorClass} rounded-full"></div>
-                            <span class="text-sm font-medium text-text-primary">${category.name}</span>
-                            <span class="text-xs text-text-secondary bg-slate-200 px-2 py-1 rounded">${eventCount} events</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="editCategory('${category.id}')" class="p-2 text-text-secondary hover:text-primary transition-colors">
-                                <i class="fas fa-edit text-sm"></i>
-                            </button>
-                            <button onclick="deleteCategory('${category.id}')" class="p-2 text-text-secondary hover:text-error transition-colors">
-                                <i class="fas fa-trash text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function addCategory() {
-            document.getElementById('categoryModalTitle').textContent = 'Add Category';
-            document.getElementById('editCategoryId').value = '';
-            document.getElementById('categoryName').value = '';
-            document.querySelectorAll('input[name="categoryColor"]').forEach(input => {
-                input.checked = false;
-            });
-            
-            document.getElementById('categoryModal').classList.remove('hidden');
-            setTimeout(() => {
-                document.querySelector('#categoryModal .modal-content').classList.add('show');
-            }, 10);
-        }
-
-        function editCategory(categoryId) {
-            const category = categories.find(c => c.id === categoryId);
-            if (!category) return;
-            
-            document.getElementById('categoryModalTitle').textContent = 'Edit Category';
-            document.getElementById('editCategoryId').value = categoryId;
-            document.getElementById('categoryName').value = category.name;
-            document.getElementById(`color-${category.color}`).checked = true;
-            
-            document.getElementById('categoryModal').classList.remove('hidden');
-            setTimeout(() => {
-                document.querySelector('#categoryModal .modal-content').classList.add('show');
-            }, 10);
-        }
-
-        function deleteCategory(categoryId) {
-            const category = categories.find(c => c.id === categoryId);
-            if (!category) return;
-            
+        // ---- Reset ----
+        function resetSection() {
+            const section = currentSection;
             showConfirmation(
-                `Are you sure you want to delete the "${category.name}" category? All events in this category will be moved to "Work".`,
+                `Reset all ${section} settings to default values?`,
                 () => {
-                    // Move events to default category
-                    const events = JSON.parse(localStorage.getItem('calendarEvents') || '[]');
-                    const updatedEvents = events.map(event => 
-                        event.category === categoryId ? { ...event, category: 'work' } : event
-                    );
-                    localStorage.setItem('calendarEvents', JSON.stringify(updatedEvents));
-                    
-                    // Remove category
-                    categories = categories.filter(c => c.id !== categoryId);
-                    saveCategoriesToStorage();
-                    renderCategories();
-                    showToast(`Category "${category.name}" deleted successfully`, 'success');
+                    if (section === 'display') {
+                        settings.timeFormat = defaultSettings.timeFormat;
+                    } else if (section === 'notifications') {
+                        settings.browserNotifications = defaultSettings.browserNotifications;
+                        settings.eventReminder = defaultSettings.eventReminder;
+                        settings.taskReminder = defaultSettings.taskReminder;
+                        settings.soundEnabled = defaultSettings.soundEnabled;
+                        settings.soundType = defaultSettings.soundType;
+                        settings.dailyEmail = defaultSettings.dailyEmail;
+                        settings.weeklyEmail = defaultSettings.weeklyEmail;
+                        settings.taskDeadlineEmail = defaultSettings.taskDeadlineEmail;
+                    } else if (section === 'data') {
+                        // Nothing to reset in UI, but we can refresh info
+                        updateStorageInfo();
+                    }
+
+                    saveSettingsToStorage();
+                    applySettings();
+                    showToast(`${section.charAt(0).toUpperCase() + section.slice(1)} settings reset`, 'success');
                 }
             );
         }
 
-        function closeCategoryModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            
-            document.querySelector('#categoryModal .modal-content').classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('categoryModal').classList.add('hidden');
-            }, 300);
-        }
-
-        function saveCategoryModal(event) {
-            event.preventDefault();
-            const categoryId = document.getElementById('editCategoryId').value;
-            const name = document.getElementById('categoryName').value.trim();
-            const colorInput = document.querySelector('input[name="categoryColor"]:checked');
-            
-            if (!name) {
-                showToast('Please enter a category name', 'error');
-                return;
-            }
-            
-            if (!colorInput) {
-                showToast('Please select a color', 'error');
-                return;
-            }
-            
-            const color = colorInput.value;
-            
-            if (categoryId) {
-                // Edit existing category
-                const categoryIndex = categories.findIndex(c => c.id === categoryId);
-                if (categoryIndex !== -1) {
-                    categories[categoryIndex] = { ...categories[categoryIndex], name, color };
-                    showToast(`Category "${name}" updated successfully`, 'success');
+        function resetToDefaults() {
+            showConfirmation(
+                'This will reset all settings to their default values. Your events and tasks will not be deleted.',
+                () => {
+                    settings = { ...defaultSettings };
+                    saveSettingsToStorage();
+                    applySettings();
+                    showToast('All settings reset to defaults', 'success');
                 }
-            } else {
-                // Add new category
-                const newCategory = {
-                    id: name.toLowerCase().replace(/\s+/g, '-'),
-                    name,
-                    color
-                };
-                categories.push(newCategory);
-                showToast(`Category "${name}" created successfully`, 'success');
-            }
-            
-            saveCategoriesToStorage();
-            renderCategories();
-            closeCategoryModal();
+            );
         }
 
-        // Data management
+        // ---- Notification / Sound Test ----
+        function playTestSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                let freq = 880;
+                switch (settings.soundType) {
+                    case 'chime':
+                        freq = 660;
+                        break;
+                    case 'bell':
+                        freq = 520;
+                        break;
+                    case 'ding':
+                        freq = 1000;
+                        break;
+                    default:
+                        freq = 880;
+                }
+
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + 0.01);
+
+                osc.start();
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1);
+                osc.stop(ctx.currentTime + 1);
+            } catch (e) {
+                console.error('Failed to play test sound', e);
+            }
+        }
+
+        function testSound() {
+            // Save current UI fields into settings first
+            saveSettings(false);
+
+            if (settings.browserNotifications && 'Notification' in window) {
+                if (Notification.permission === 'granted') {
+                    new Notification('Notification Test', {
+                        body: 'This is how your reminders will appear.'
+                    });
+                } else if (Notification.permission !== 'denied') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            new Notification('Notification Test', {
+                                body: 'This is how your reminders will appear.'
+                            });
+                        }
+                    });
+                }
+            }
+
+            if (settings.soundEnabled) {
+                playTestSound();
+            }
+
+            showToast('Test notification triggered', 'info');
+        }
+
+        // ---- Data Management ----
         function updateStorageInfo() {
             const container = document.getElementById('storageInfo');
             if (!container) return;
-            
+
             const events = JSON.parse(localStorage.getItem('calendarEvents') || '[]');
             const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-            const settings = localStorage.getItem('schedulerSettings') || '{}';
-            
-            const storageSize = (JSON.stringify(events).length + JSON.stringify(tasks).length + settings.length) / 1024;
-            
+            const settingsStr = localStorage.getItem('schedulerSettings') || '{}';
+
+            const storageSize = (JSON.stringify(events).length + JSON.stringify(tasks).length + settingsStr.length) / 1024;
+
             container.innerHTML = `
                 <div class="flex justify-between text-xs">
                     <span class="text-text-secondary">Events:</span>
-                    <span class="text-text-primary">${events.length} items</span>
+                    <span class="text-text-primary">${Array.isArray(events) ? events.length : 0} items</span>
                 </div>
                 <div class="flex justify-between text-xs">
                     <span class="text-text-secondary">Tasks:</span>
-                    <span class="text-text-primary">${tasks.length} items</span>
+                    <span class="text-text-primary">${Array.isArray(tasks) ? tasks.length : 0} items</span>
                 </div>
                 <div class="flex justify-between text-xs">
                     <span class="text-text-secondary">Categories:</span>
@@ -976,9 +653,9 @@
             const events = JSON.parse(localStorage.getItem('calendarEvents') || '[]');
             const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
             const data = { events, tasks, categories, settings, exportDate: new Date().toISOString() };
-            
+
             let content, filename, mimeType;
-            
+
             switch (format) {
                 case 'json':
                     content = JSON.stringify(data, null, 2);
@@ -988,8 +665,8 @@
                 case 'csv':
                     const csvContent = [
                         'Type,Title,Date,Time,Category,Priority,Status,Description',
-                        ...events.map(e => `Event,"${e.title}","${e.date}","${e.time}","${e.category}",,"","${e.description || ''}"`),
-                        ...tasks.map(t => `Task,"${t.title}","${t.dueDate}",,"${t.category}","${t.priority}","${t.status}","${t.description || ''}"`)
+                        ...events.map(e => `Event,"${e.title || ''}","${e.date || ''}","${e.time || ''}","${e.category || ''}",,"","${(e.description || '').replace(/"/g, '""')}"`),
+                        ...tasks.map(t => `Task,"${t.title || ''}","${t.dueDate || ''}",,"${t.category || ''}","${t.priority || ''}","${t.status || ''}","${(t.description || '').replace(/"/g, '""')}"`)
                     ].join('\n');
                     content = csvContent;
                     filename = `scheduler-data-${new Date().toISOString().split('T')[0]}.csv`;
@@ -1002,13 +679,13 @@
                         'PRODID:-//Super Scheduler//EN',
                         ...events.map(e => [
                             'BEGIN:VEVENT',
-                            `UID:${e.id}@scheduler.app`,
-                            `DTSTART:${e.date.replace(/-/g, '')}T${e.time.replace(':', '')}00`,
-                            `SUMMARY:${e.title}`,
+                            `UID:${e.id || (Math.random().toString(36).slice(2))}@scheduler.app`,
+                            e.date && e.time ? `DTSTART:${e.date.replace(/-/g, '')}T${e.time.replace(':', '')}00` : '',
+                            `SUMMARY:${e.title || ''}`,
                             `DESCRIPTION:${e.description || ''}`,
-                            `CATEGORIES:${e.category}`,
+                            `CATEGORIES:${e.category || ''}`,
                             'END:VEVENT'
-                        ].join('\n')),
+                        ].filter(Boolean).join('\n')),
                         'END:VCALENDAR'
                     ].join('\n');
                     content = icalContent;
@@ -1016,7 +693,7 @@
                     mimeType = 'text/calendar';
                     break;
             }
-            
+
             const blob = new Blob([content], { type: mimeType });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1024,7 +701,7 @@
             a.download = filename;
             a.click();
             URL.revokeObjectURL(url);
-            
+
             showToast(`Data exported successfully as ${format.toUpperCase()}`, 'success');
         }
 
@@ -1032,7 +709,7 @@
             const fileInput = document.getElementById('importFile');
             const fileName = document.getElementById('fileName');
             const importBtn = document.getElementById('importBtn');
-            
+
             if (fileInput.files[0]) {
                 fileName.textContent = fileInput.files[0].name;
                 importBtn.disabled = false;
@@ -1050,78 +727,54 @@
                 showToast('Please select a file to import', 'error');
                 return;
             }
-            
+
             const file = fileInput.files[0];
             const reader = new FileReader();
-            
+
             reader.onload = function(e) {
                 try {
                     const data = JSON.parse(e.target.result);
-                    
+
                     if (data.events) localStorage.setItem('calendarEvents', JSON.stringify(data.events));
                     if (data.tasks) localStorage.setItem('tasks', JSON.stringify(data.tasks));
                     if (data.categories) {
                         categories = data.categories;
-                        saveCategoriesToStorage();
                     }
                     if (data.settings) {
-                        settings = data.settings;
+                        settings = { ...defaultSettings, ...data.settings };
                         saveSettingsToStorage();
                         applySettings();
                     }
-                    
+
                     showToast('Data imported successfully', 'success');
                     updateStorageInfo();
-                    if (currentSection === 'categories') renderCategories();
-                    
                 } catch (error) {
                     showToast('Error importing data. Please check the file format.', 'error');
                 }
             };
-            
+
             reader.readAsText(file);
         }
 
         function clearAllData() {
             showConfirmation(
-                'This will permanently delete all your calendar data including events, tasks, categories, and settings. This action cannot be undone.',
+                'This will permanently delete all your calendar data including events, tasks, and settings. This action cannot be undone.',
                 () => {
                     localStorage.removeItem('calendarEvents');
                     localStorage.removeItem('tasks');
                     localStorage.removeItem('schedulerSettings');
-                    localStorage.removeItem('schedulerCategories');
-                    
-                    // Reset to defaults
-                    settings = {};
-                    categories = [
-                        { id: 'work', name: 'Work', color: 'blue' },
-                        { id: 'personal', name: 'Personal', color: 'green' },
-                        { id: 'health', name: 'Health', color: 'red' },
-                        { id: 'social', name: 'Social', color: 'purple' }
-                    ];
-                    
-                    loadSettings();
-                    saveCategoriesToStorage();
+
+                    settings = { ...defaultSettings };
+                    saveSettingsToStorage();
+                    applySettings();
                     updateStorageInfo();
-                    if (currentSection === 'categories') renderCategories();
-                    
+
                     showToast('All data cleared successfully', 'success');
                 }
             );
         }
 
-        // Quick actions
-        function resetToDefaults() {
-            showConfirmation(
-                'This will reset all settings to their default values. Your data will not be affected.',
-                () => {
-                    settings = {};
-                    loadSettings();
-                    showToast('Settings reset to defaults', 'success');
-                }
-            );
-        }
-
+        // ---- Export / Import settings only ----
         function exportSettings() {
             const data = { settings, categories, exportDate: new Date().toISOString() };
             const content = JSON.stringify(data, null, 2);
@@ -1132,7 +785,7 @@
             a.download = `scheduler-settings-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
-            
+
             showToast('Settings exported successfully', 'success');
         }
 
@@ -1148,13 +801,12 @@
                         try {
                             const data = JSON.parse(event.target.result);
                             if (data.settings) {
-                                settings = data.settings;
+                                settings = { ...defaultSettings, ...data.settings };
                                 saveSettingsToStorage();
                                 applySettings();
                             }
                             if (data.categories) {
                                 categories = data.categories;
-                                saveCategoriesToStorage();
                             }
                             showToast('Settings imported successfully', 'success');
                         } catch (error) {
@@ -1167,49 +819,7 @@
             input.click();
         }
 
-        // Save and reset
-        function resetSection() {
-            showConfirmation(
-                `Reset all ${currentSection} settings to default values?`,
-                () => {
-                    // Reset specific section settings
-                    switch (currentSection) {
-                        case 'display':
-                            settings.timeFormat = '12';
-                            settings.weekStart = 'sunday';
-                            settings.dateFormat = 'mm/dd/yyyy';
-                            settings.defaultView = 'month';
-                            settings.theme = 'light';
-                            break;
-                        case 'notifications':
-                            settings.browserNotifications = true;
-                            settings.eventReminder = '15';
-                            settings.taskReminder = '30';
-                            settings.soundEnabled = true;
-                            settings.soundType = 'default';
-                            settings.dailyEmail = false;
-                            settings.weeklyEmail = false;
-                            settings.taskDeadlineEmail = false;
-                            break;
-                        case 'accessibility':
-                            settings.highContrast = false;
-                            settings.screenReader = true;
-                            settings.keyboardShortcuts = true;
-                            settings.focusIndicators = true;
-                            settings.skipToContent = false;
-                            settings.fontSize = '16';
-                            settings.reducedMotion = false;
-                            break;
-                    }
-                    
-                    saveSettingsToStorage();
-                    applySettings();
-                    showToast(`${currentSection.charAt(0).toUpperCase() + currentSection.slice(1)} settings reset`, 'success');
-                }
-            );
-        }
-
-        // Confirmation modal
+        // ---- Confirmation modal ----
         function showConfirmation(message, action) {
             document.getElementById('confirmMessage').textContent = message;
             pendingAction = action;
@@ -1221,8 +831,9 @@
 
         function closeConfirmModal(event) {
             if (event && event.target !== event.currentTarget) return;
-            
-            document.querySelector('#confirmModal .modal-content').classList.remove('show');
+
+            const modalContent = document.querySelector('#confirmModal .modal-content');
+            modalContent.classList.remove('show');
             setTimeout(() => {
                 document.getElementById('confirmModal').classList.add('hidden');
                 pendingAction = null;
@@ -1236,23 +847,21 @@
             closeConfirmModal();
         }
 
-        // Toast notifications
+        // ---- Toast ----
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toastIcon');
             const messageEl = document.getElementById('toastMessage');
-            
+
             messageEl.textContent = message;
-            
-            // Set icon based on type
+
             icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
                            type === 'error' ? 'fas fa-exclamation-circle text-error' :
                            'fas fa-info-circle text-accent';
-            
-            // Show toast
+
             toast.classList.remove('translate-x-full');
             toast.classList.add('translate-x-0');
-            
+
             setTimeout(() => {
                 hideToast();
             }, 3000);
@@ -1264,34 +873,24 @@
             toast.classList.add('translate-x-full');
         }
 
-        // Initialize settings page
+        // ---- Init ----
         document.addEventListener('DOMContentLoaded', function() {
             loadSettings();
-            loadCategories();
-            
-            // Set initial active navigation
+
+            // Set initial nav active (Display)
             const displayBtn = document.querySelector('.settings-nav-btn');
-            displayBtn.classList.add('active', 'bg-primary', 'text-white');
-            displayBtn.classList.remove('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
-            
-            // Add color selection listeners
-            document.querySelectorAll('input[name="categoryColor"]').forEach(input => {
-                input.addEventListener('change', function() {
-                    document.querySelectorAll('label[for^="color-"]').forEach(label => {
-                        label.classList.remove('ring-2', 'ring-primary', 'ring-offset-2');
-                    });
-                    
-                    if (this.checked) {
-                        document.querySelector(`label[for="${this.id}"]`).classList.add('ring-2', 'ring-primary', 'ring-offset-2');
-                    }
-                });
-            });
+            if (displayBtn) {
+                displayBtn.classList.add('active', 'bg-primary', 'text-white');
+                displayBtn.classList.remove('text-text-secondary', 'hover:text-primary', 'hover:bg-slate-50');
+            }
+
+            updateStorageInfo();
         });
 
         // Keyboard shortcuts
         document.addEventListener('keydown', function(event) {
             if (event.ctrlKey || event.metaKey) {
-                switch(event.key) {
+                switch (event.key) {
                     case 's':
                         event.preventDefault();
                         saveAllSettings();
@@ -1302,14 +901,11 @@
                         break;
                 }
             }
-            
-            // Escape key to close modals
+
             if (event.key === 'Escape') {
-                closeCategoryModal();
                 closeConfirmModal();
             }
         });
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>

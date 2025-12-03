@@ -6,7 +6,7 @@
     <title>Calendar Dashboard - Super Scheduler</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
 </head>
 <body class="bg-background min-h-screen">
     <!-- Header Navigation -->
@@ -23,13 +23,10 @@
                     </div>
                 </div>
 
-                <!-- Navigation Menu -->
+                <!-- Navigation Menu (Create Event removed) -->
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="calendar_dashboard.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -48,14 +45,11 @@
                 </button>
             </div>
 
-            <!-- Mobile Navigation Menu -->
+            <!-- Mobile Navigation Menu (Create Event removed) -->
             <div id="mobileMenu" class="md:hidden hidden border-t border-slate-200 py-4">
                 <div class="flex flex-col space-y-2">
                     <a href="calendar_dashboard.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -90,6 +84,8 @@
                             <input type="date" id="quickEventDate" class="form-input text-sm" required />
                             <input type="time" id="quickEventTime" class="form-input text-sm" required />
                         </div>
+                        <!-- Inline conflict / validation warning for quick event -->
+                        <p id="quickEventError" class="text-xs text-error mt-1 hidden"></p>
                         <div>
                             <select id="quickEventCategory" class="form-input text-sm">
                                 <option value="work">Work</option>
@@ -170,21 +166,7 @@
                             <button onclick="goToToday()" class="btn-secondary text-sm">Today</button>
                         </div>
 
-                        <!-- View Toggle -->
-                        <div class="flex items-center space-x-2 bg-slate-100 rounded-lg p-1">
-                            <button onclick="changeView('month')" class="view-btn active px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                                Month
-                            </button>
-                            <button onclick="changeView('week')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                                Week
-                            </button>
-                            <button onclick="changeView('day')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                                Day
-                            </button>
-                            <button onclick="changeView('agenda')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                                Agenda
-                            </button>
-                        </div>
+                        <!-- View Toggle REMOVED on purpose (Month/Week/Day/Agenda) -->
                     </div>
                 </div>
 
@@ -250,6 +232,8 @@
                         <input type="time" id="eventTime" class="form-input" required />
                     </div>
                 </div>
+                <!-- Inline conflict warning for modal -->
+                <p id="modalEventError" class="text-xs text-error mt-1 hidden"></p>
                 <div>
                     <label class="block text-sm font-medium text-text-primary mb-1">Category</label>
                     <select id="eventCategory" class="form-input">
@@ -277,23 +261,207 @@
     <script>
         // Global variables
         let currentDate = new Date();
-        let currentView = 'month';
         let events = [];
         let editingEventId = null;
 
-        // Local Storage functions
-        function saveEventsToStorage() {
-            localStorage.setItem('calendarEvents', JSON.stringify(events));
-        }
+        // Reminder settings (loaded from schedulerSettings)
+        let reminderSettings = {
+            eventReminderMinutes: 5,  // default 5 minutes
+            soundEnabled: true,
+            browserNotifications: true
+        };
+        let timeFormatSetting = '12';
+        let reminderTimers = {};
+        let remindedEvents = new Set();
 
-        function loadEventsFromStorage() {
-            const stored = localStorage.getItem('calendarEvents');
-            if (stored) {
-                events = JSON.parse(stored);
+        // ------------- Local Storage helpers -------------
+
+        function saveEventsToStorage() {
+            try {
+                localStorage.setItem('calendarEvents', JSON.stringify(events));
+            } catch (err) {
+                console.error('Failed to save events to storage', err);
             }
         }
 
-        // Event management functions
+        function loadEventsFromStorage() {
+            try {
+                const stored = localStorage.getItem('calendarEvents');
+                events = stored ? JSON.parse(stored) : [];
+                if (!Array.isArray(events)) events = [];
+            } catch (err) {
+                console.error('Failed to load events from storage', err);
+                events = [];
+            }
+            scheduleRemindersForAllEvents();
+        }
+
+        function loadReminderSettings() {
+            try {
+                const raw = localStorage.getItem('schedulerSettings');
+                if (!raw) return;
+                const cfg = JSON.parse(raw);
+
+                // Time format
+                if (cfg.timeFormat === '24') {
+                    timeFormatSetting = '24';
+                } else {
+                    timeFormatSetting = '12';
+                }
+
+                // Event reminder minutes
+                if (cfg.eventReminder) {
+                    if (cfg.eventReminder === 'none') {
+                        reminderSettings.eventReminderMinutes = null;
+                    } else {
+                        const m = parseInt(cfg.eventReminder, 10);
+                        if (!isNaN(m)) reminderSettings.eventReminderMinutes = m;
+                    }
+                }
+
+                // Sound on/off
+                if (typeof cfg.soundEnabled === 'boolean') {
+                    reminderSettings.soundEnabled = cfg.soundEnabled;
+                }
+
+                // Browser notifications on/off
+                if (typeof cfg.browserNotifications === 'boolean') {
+                    reminderSettings.browserNotifications = cfg.browserNotifications;
+                }
+            } catch (e) {
+                console.error('Failed to load reminder/settings config', e);
+            }
+        }
+
+        // ------------- Time formatting -------------
+
+        function formatTimeForDisplay(timeStr) {
+            if (!timeStr) return '';
+            // Expect "HH:MM"
+            const parts = timeStr.split(':');
+            if (parts.length < 2) return timeStr;
+            const hStr = parts[0];
+            const mStr = parts[1];
+            let h = parseInt(hStr, 10);
+            if (isNaN(h)) return timeStr;
+
+            if (timeFormatSetting === '24') {
+                // Keep 24h as stored
+                return `${hStr.padStart(2, '0')}:${mStr.padStart(2, '0')}`;
+            }
+
+            // 12-hour format
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12;
+            if (h === 0) h = 12;
+            return `${h}:${mStr.padStart(2, '0')} ${ampm}`;
+        }
+
+        // ------------- Reminder scheduling -------------
+
+        function clearAllReminderTimers() {
+            Object.values(reminderTimers).forEach(id => clearTimeout(id));
+            reminderTimers = {};
+        }
+
+        function scheduleRemindersForAllEvents() {
+            clearAllReminderTimers();
+            if (reminderSettings.eventReminderMinutes == null) return;
+
+            const now = new Date();
+
+            events.forEach(ev => {
+                if (!ev || !ev.id || !ev.date || !ev.time) return;
+
+                const eventDateTime = new Date(ev.date + 'T' + ev.time);
+                if (isNaN(eventDateTime.getTime())) return;
+
+                const reminderTime = new Date(
+                    eventDateTime.getTime() - reminderSettings.eventReminderMinutes * 60000
+                );
+
+                if (reminderTime <= now) {
+                    return; // too late to schedule
+                }
+
+                const delay = reminderTime.getTime() - now.getTime();
+                reminderTimers[ev.id] = setTimeout(() => {
+                    if (remindedEvents.has(ev.id)) return;
+                    remindedEvents.add(ev.id);
+                    triggerEventReminder(ev);
+                }, delay);
+            });
+        }
+
+        function requestNotificationPermissionIfNeeded() {
+            if (!('Notification' in window)) return;
+
+            if (Notification.permission === 'default') {
+                Notification.requestPermission().then(() => {});
+            }
+        }
+
+        function showBrowserNotification(title, body) {
+            if (!('Notification' in window)) return;
+            if (Notification.permission === 'granted') {
+                new Notification(title, { body });
+            }
+        }
+
+        function triggerEventReminder(ev) {
+            const title = ev.title || 'Event';
+            const time = ev.time ? formatTimeForDisplay(ev.time) : '';
+            const date = ev.date || '';
+
+            const body = time && date ? `${time} on ${date}` : (time || date || '');
+
+            showToast(`Reminder: "${title}" ${body ? ' — ' + body : ''}`, 'info');
+
+            if (reminderSettings.browserNotifications) {
+                if (Notification.permission === 'granted') {
+                    showBrowserNotification(title, body || 'Event reminder');
+                } else if (Notification.permission === 'default') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            showBrowserNotification(title, body || 'Event reminder');
+                        }
+                    });
+                }
+            }
+
+            if (reminderSettings.soundEnabled) {
+                playReminderSound();
+            }
+        }
+
+        function playReminderSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+
+                const ctx = new AudioContext();
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 880; // Beep
+
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+
+                gainNode.gain.setValueAtTime(0.0001, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + 0.01);
+
+                oscillator.start();
+                gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1);
+                oscillator.stop(ctx.currentTime + 1);
+            } catch (e) {
+                console.error('Failed to play reminder sound', e);
+            }
+        }
+
+        // ------------- Event helpers -------------
+
         function generateEventId() {
             return Date.now().toString() + Math.random().toString(36).substr(2, 9);
         }
@@ -312,22 +480,6 @@
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
-        }
-
-        // View toggle functionality
-        function changeView(view) {
-            const buttons = document.querySelectorAll('.view-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('text-text-secondary', 'hover:text-primary');
-            });
-            
-            event.target.classList.add('active', 'bg-primary', 'text-white');
-            event.target.classList.remove('text-text-secondary', 'hover:text-primary');
-            
-            currentView = view;
-            showToast(`Switched to ${view} view`, 'info');
-            renderCalendar();
         }
 
         // Date navigation
@@ -352,7 +504,7 @@
         function updateCurrentDateDisplay() {
             const monthNames = ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"];
-            document.getElementById('currentDate').textContent = 
+            document.getElementById('currentDate').textContent =
                 `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
         }
 
@@ -364,80 +516,102 @@
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             const firstDay = new Date(year, month, 1);
-            const lastDay = new Date(year, month + 1, 0);
             const startDate = new Date(firstDay);
             startDate.setDate(startDate.getDate() - firstDay.getDay());
 
             const today = new Date();
-            
-            for (let i = 0; i < 42; i++) { // 6 weeks * 7 days
+
+            for (let i = 0; i < 42; i++) {
                 const cellDate = new Date(startDate);
                 cellDate.setDate(startDate.getDate() + i);
-                
+
                 const cell = document.createElement('div');
                 cell.className = 'calendar-cell';
                 cell.setAttribute('ondrop', 'dropEvent(event)');
                 cell.setAttribute('ondragover', 'allowDrop(event)');
                 cell.setAttribute('ondblclick', `quickCreateEvent(event, '${formatDate(cellDate)}')`);
-                
+
                 const dayNumber = document.createElement('div');
-                dayNumber.className = cellDate.getMonth() === month 
-                    ? 'text-sm font-medium text-text-primary mb-2' 
+                dayNumber.className = cellDate.getMonth() === month
+                    ? 'text-sm font-medium text-text-primary mb-2'
                     : 'text-sm text-text-secondary mb-2';
                 dayNumber.textContent = cellDate.getDate();
-                
-                // Add "Today" indicator
+
+                // Today indicator
                 if (cellDate.toDateString() === today.toDateString()) {
                     const todayIndicator = document.createElement('div');
                     todayIndicator.className = 'text-sm bg-primary text-white px-2 py-1 rounded text-center font-medium mb-2';
                     todayIndicator.textContent = 'Today';
                     cell.appendChild(todayIndicator);
                 }
-                
+
                 cell.appendChild(dayNumber);
-                
-                // Add events for this date
+
+                // Events
                 const dateEvents = getEventsForDate(cellDate);
-                dateEvents.forEach(event => {
-                    const eventElement = createEventElement(event);
+                dateEvents.forEach(ev => {
+                    const eventElement = createEventElement(ev);
                     cell.appendChild(eventElement);
                 });
-                
+
                 calendarGrid.appendChild(cell);
             }
-            
+
             updateCategoryCounts();
+            filterEventsByCategory();
         }
 
         function formatDate(date) {
+            if (typeof date === 'string') {
+                const d = new Date(date);
+                if (!isNaN(d)) return d.toISOString().split('T')[0];
+                return date.split('T')[0];
+            }
             return date.toISOString().split('T')[0];
         }
 
         function getEventsForDate(date) {
             const dateStr = formatDate(date);
-            return events.filter(event => event.date === dateStr);
+            return events.filter(ev => ev.date === dateStr);
         }
 
-        function createEventElement(event) {
-            const colors = getCategoryColors(event.category);
+        function createEventElement(ev) {
+            const colors = getCategoryColors(ev.category);
             const eventDiv = document.createElement('div');
             eventDiv.className = `event-item ${colors.bg} ${colors.text} border-l-4 ${colors.border} cursor-pointer`;
             eventDiv.setAttribute('draggable', 'true');
             eventDiv.setAttribute('ondragstart', 'dragEvent(event)');
-            eventDiv.setAttribute('onclick', `editEvent('${event.id}')`);
-            eventDiv.setAttribute('data-event-id', event.id);
-            
+            eventDiv.setAttribute('onclick', `editEvent('${ev.id}')`);
+            eventDiv.setAttribute('data-event-id', ev.id);
+
+            const safeTitle = ev.title || '(No title)';
+            const safeTime = ev.time ? formatTimeForDisplay(ev.time) : '';
+
             eventDiv.innerHTML = `
-                <span class="text-xs font-medium">${event.title}</span>
-                <div class="text-xs opacity-75">${event.time}</div>
+                <span class="text-xs font-medium">${safeTitle}</span>
+                <div class="text-xs opacity-75">${safeTime}</div>
             `;
-            
+
             return eventDiv;
         }
 
-        // Quick event creation
-        function quickCreateEvent(event, date) {
-            event.preventDefault();
+        // Conflict helper
+        function hasTimeConflict(date, time, ignoreEventId = null) {
+            if (!date || !time) return false;
+            const normalizedDate = date.toString().trim();
+            const normalizedTime = time.toString().trim();
+            return events.some(e => {
+                if (!e) return false;
+                if (ignoreEventId && e.id === ignoreEventId) return false;
+                if (!e.date || !e.time) return false;
+                return e.date.toString().trim() === normalizedDate &&
+                       e.time.toString().trim() === normalizedTime;
+            });
+        }
+
+        // Quick create via double-click on calendar cell
+        function quickCreateEvent(e, date) {
+            e.preventDefault();
             const modal = document.getElementById('eventModal');
             document.getElementById('editEventId').value = '';
             document.getElementById('eventTitle').value = '';
@@ -445,105 +619,174 @@
             document.getElementById('eventTime').value = '09:00';
             document.getElementById('eventCategory').value = 'work';
             document.getElementById('eventDescription').value = '';
-            
+            const modalError = document.getElementById('modalEventError');
+            if (modalError) {
+                modalError.textContent = '';
+                modalError.classList.add('hidden');
+            }
+
             modal.classList.remove('hidden');
             setTimeout(() => {
                 document.querySelector('.modal-content').classList.add('show');
             }, 10);
         }
 
-        function createQuickEvent(event) {
-            event.preventDefault();
-            const title = document.getElementById('quickEventTitle').value;
-            const date = document.getElementById('quickEventDate').value;
-            const time = document.getElementById('quickEventTime').value;
-            const category = document.getElementById('quickEventCategory').value;
-            
+        // Quick event creation from sidebar form
+        function createQuickEvent(e) {
+            e.preventDefault();
+
+            const titleEl = document.getElementById('quickEventTitle');
+            const dateEl = document.getElementById('quickEventDate');
+            const timeEl = document.getElementById('quickEventTime');
+            const categoryEl = document.getElementById('quickEventCategory');
+            const quickError = document.getElementById('quickEventError');
+
+            if (quickError) {
+                quickError.textContent = '';
+                quickError.classList.add('hidden');
+            }
+
+            const title = titleEl.value && titleEl.value.trim();
+            const date = dateEl.value && dateEl.value.trim();
+            const time = timeEl.value && timeEl.value.trim();
+            const category = categoryEl.value && categoryEl.value.trim();
+
             if (!title || !date || !time) {
+                if (quickError) {
+                    quickError.textContent = 'Please fill in all required fields.';
+                    quickError.classList.remove('hidden');
+                }
                 showToast('Please fill in all required fields', 'error');
                 return;
             }
-            
+
+            if (hasTimeConflict(date, time)) {
+                if (quickError) {
+                    quickError.textContent = 'Time conflict — this time is already occupied.';
+                    quickError.classList.remove('hidden');
+                }
+                showToast('Time conflict — this time is already occupied.', 'error');
+                return;
+            }
+
             const newEvent = {
                 id: generateEventId(),
-                title: title,
-                date: date,
-                time: time,
-                category: category,
+                title,
+                date,
+                time,
+                category,
                 description: ''
             };
-            
+
             events.push(newEvent);
             saveEventsToStorage();
+            scheduleRemindersForAllEvents();
             renderCalendar();
             loadUpcomingTasks();
-            
-            // Reset form
-            document.getElementById('quickEventTitle').value = '';
-            document.getElementById('quickEventDate').value = '';
-            document.getElementById('quickEventTime').value = '';
-            document.getElementById('quickEventCategory').value = 'work';
-            
+
+            titleEl.value = '';
+            dateEl.value = '';
+            timeEl.value = '';
+            categoryEl.value = 'work';
+
             showToast('Event created successfully!', 'success');
         }
 
-        // Event editing
+        // Edit / Save / Delete event
         function editEvent(eventId) {
-            const event = events.find(e => e.id === eventId);
-            if (!event) return;
-            
+            const ev = events.find(e => e.id === eventId);
+            if (!ev) return;
+
             editingEventId = eventId;
             document.getElementById('editEventId').value = eventId;
-            document.getElementById('eventTitle').value = event.title;
-            document.getElementById('eventDate').value = event.date;
-            document.getElementById('eventTime').value = event.time;
-            document.getElementById('eventCategory').value = event.category;
-            document.getElementById('eventDescription').value = event.description || '';
-            
+            document.getElementById('eventTitle').value = ev.title || '';
+            document.getElementById('eventDate').value = ev.date || '';
+            document.getElementById('eventTime').value = ev.time || '';
+            document.getElementById('eventCategory').value = ev.category || 'work';
+            document.getElementById('eventDescription').value = ev.description || '';
+
+            const modalError = document.getElementById('modalEventError');
+            if (modalError) {
+                modalError.textContent = '';
+                modalError.classList.add('hidden');
+            }
+
             document.getElementById('eventModal').classList.remove('hidden');
             setTimeout(() => {
                 document.querySelector('.modal-content').classList.add('show');
             }, 10);
         }
 
-        function saveEventModal(event) {
-            event.preventDefault();
+        function saveEventModal(e) {
+            e.preventDefault();
             const eventId = document.getElementById('editEventId').value;
-            const title = document.getElementById('eventTitle').value;
-            const date = document.getElementById('eventDate').value;
-            const time = document.getElementById('eventTime').value;
-            const category = document.getElementById('eventCategory').value;
-            const description = document.getElementById('eventDescription').value;
-            
+            const title = document.getElementById('eventTitle').value && document.getElementById('eventTitle').value.trim();
+            const date = document.getElementById('eventDate').value && document.getElementById('eventDate').value.trim();
+            const time = document.getElementById('eventTime').value && document.getElementById('eventTime').value.trim();
+            const category = document.getElementById('eventCategory').value && document.getElementById('eventCategory').value.trim();
+            const description = document.getElementById('eventDescription').value || '';
+            const modalError = document.getElementById('modalEventError');
+
+            if (modalError) {
+                modalError.textContent = '';
+                modalError.classList.add('hidden');
+            }
+
+            if (!title || !date || !time) {
+                if (modalError) {
+                    modalError.textContent = 'Please fill in all required fields.';
+                    modalError.classList.remove('hidden');
+                }
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
             if (eventId) {
-                // Update existing event
                 const eventIndex = events.findIndex(e => e.id === eventId);
                 if (eventIndex !== -1) {
+                    if (hasTimeConflict(date, time, eventId)) {
+                        if (modalError) {
+                            modalError.textContent = 'Time conflict — this time is already occupied.';
+                            modalError.classList.remove('hidden');
+                        }
+                        showToast('Time conflict — this time is already occupied.', 'error');
+                        return;
+                    }
+
                     events[eventIndex] = {
                         ...events[eventIndex],
-                        title: title,
-                        date: date,
-                        time: time,
-                        category: category,
-                        description: description
+                        title,
+                        date,
+                        time,
+                        category,
+                        description
                     };
                     showToast('Event updated successfully!', 'success');
                 }
             } else {
-                // Create new event
+                if (hasTimeConflict(date, time)) {
+                    if (modalError) {
+                        modalError.textContent = 'Time conflict — this time is already occupied.';
+                        modalError.classList.remove('hidden');
+                    }
+                    showToast('Time conflict — this time is already occupied.', 'error');
+                    return;
+                }
+
                 const newEvent = {
                     id: generateEventId(),
-                    title: title,
-                    date: date,
-                    time: time,
-                    category: category,
-                    description: description
+                    title,
+                    date,
+                    time,
+                    category,
+                    description
                 };
                 events.push(newEvent);
                 showToast('Event created successfully!', 'success');
             }
-            
+
             saveEventsToStorage();
+            scheduleRemindersForAllEvents();
             renderCalendar();
             loadUpcomingTasks();
             closeModal();
@@ -552,10 +795,11 @@
         function deleteEventFromModal() {
             const eventId = document.getElementById('editEventId').value;
             if (!eventId) return;
-            
+
             if (confirm('Are you sure you want to delete this event?')) {
                 events = events.filter(e => e.id !== eventId);
                 saveEventsToStorage();
+                scheduleRemindersForAllEvents();
                 renderCalendar();
                 loadUpcomingTasks();
                 showToast('Event deleted successfully', 'success');
@@ -563,61 +807,75 @@
             }
         }
 
-        function closeModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            
-            document.querySelector('.modal-content').classList.remove('show');
+        function closeModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+
+            const modalContent = document.querySelector('.modal-content');
+            if (!modalContent) {
+                document.getElementById('eventModal').classList.add('hidden');
+                return;
+            }
+
+            modalContent.classList.remove('show');
             setTimeout(() => {
                 document.getElementById('eventModal').classList.add('hidden');
             }, 300);
         }
 
-        // Drag and drop functionality
-        function dragEvent(event) {
-            const eventElement = event.target.closest('.event-item');
-            event.dataTransfer.setData('text/plain', eventElement.getAttribute('data-event-id'));
+        // Drag and drop
+        function dragEvent(e) {
+            const eventElement = e.target.closest('.event-item');
+            e.dataTransfer.setData('text/plain', eventElement.getAttribute('data-event-id'));
             eventElement.classList.add('drag-ghost');
         }
 
-        function allowDrop(event) {
-            event.preventDefault();
-            event.currentTarget.classList.add('drop-zone', 'active');
+        function allowDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drop-zone', 'active');
         }
 
-        function dropEvent(event) {
-            event.preventDefault();
-            event.currentTarget.classList.remove('drop-zone', 'active');
-            
-            const eventId = event.dataTransfer.getData('text/plain');
-            const eventObj = events.find(e => e.id === eventId);
+        function dropEvent(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drop-zone', 'active');
+
+            const eventId = e.dataTransfer.getData('text/plain');
+            const eventObj = events.find(ev => ev.id === eventId);
             if (!eventObj) return;
-            
-            // Get the target date from the calendar cell
-            const cell = event.currentTarget;
+
+            const cell = e.currentTarget;
             const dayElement = cell.querySelector('.text-text-primary, .text-text-secondary');
             if (!dayElement) return;
-            
+
             const day = parseInt(dayElement.textContent);
             const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-            
-            // Update event date
-            eventObj.date = formatDate(newDate);
+            const newDateStr = formatDate(newDate);
+
+            if (hasTimeConflict(newDateStr, eventObj.time, eventObj.id)) {
+                showToast('Time conflict — this time is already occupied.', 'error');
+                return;
+            }
+
+            eventObj.date = newDateStr;
             saveEventsToStorage();
+            scheduleRemindersForAllEvents();
             renderCalendar();
-            
+
             showToast('Event rescheduled successfully', 'success');
         }
 
         // Category filtering
         function filterEventsByCategory() {
-            const checkedCategories = Array.from(document.querySelectorAll('.category-filter:checked'))
+            const checkboxes = document.querySelectorAll('.category-filter');
+            if (!checkboxes || checkboxes.length === 0) return;
+
+            const checkedCategories = Array.from(checkboxes)
+                .filter(cb => cb.checked)
                 .map(cb => cb.dataset.category);
-            
-            // Hide/show events based on category filters
+
             document.querySelectorAll('.event-item').forEach(eventElement => {
                 const eventId = eventElement.getAttribute('data-event-id');
-                const event = events.find(e => e.id === eventId);
-                if (event && checkedCategories.includes(event.category)) {
+                const ev = events.find(e => e.id === eventId);
+                if (ev && checkedCategories.includes(ev.category)) {
                     eventElement.style.display = 'block';
                 } else {
                     eventElement.style.display = 'none';
@@ -632,7 +890,7 @@
                 health: events.filter(e => e.category === 'health').length,
                 social: events.filter(e => e.category === 'social').length
             };
-            
+
             Object.entries(categoryCounts).forEach(([category, count]) => {
                 const countElement = document.querySelector(`.category-count[data-category="${category}"]`);
                 if (countElement) {
@@ -641,16 +899,72 @@
             });
         }
 
-        // Load upcoming tasks from localStorage
+        // Upcoming tasks
+        function isValidTaskObject(task) {
+            if (!task || typeof task !== 'object') return false;
+            if (!task.title) return false;
+            if (!task.dueDate) return false;
+            if (!task.status) task.status = 'pending';
+            return true;
+        }
+
+        function parseDateSafe(value) {
+            if (!value) return null;
+            if (value instanceof Date) {
+                if (isNaN(value)) return null;
+                return value;
+            }
+            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                const d = new Date(value + 'T00:00:00');
+                return isNaN(d) ? null : d;
+            }
+            const d = new Date(value);
+            return isNaN(d) ? null : d;
+        }
+
+        function completeTaskFromDashboard(taskId) {
+            try {
+                const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+                const idx = tasks.findIndex(t => t.id === taskId);
+                if (idx === -1) return;
+                tasks[idx].status = 'completed';
+                tasks[idx].completedAt = new Date().toISOString();
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                loadUpcomingTasks();
+                showToast('Task marked complete', 'success');
+            } catch (err) {
+                console.error('Error completing task from dashboard', err);
+                showToast('Failed to complete task', 'error');
+            }
+        }
+
         function loadUpcomingTasks() {
             const container = document.getElementById('upcomingTasksContainer');
-            const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-            
-            // Filter tasks that are pending and coming up soon
-            const upcomingTasks = tasks.filter(task => 
-                task.status === 'pending' && new Date(task.dueDate) >= new Date()
-            ).slice(0, 3); // Show only first 3
-            
+            let tasksRaw = [];
+            try {
+                tasksRaw = JSON.parse(localStorage.getItem('tasks') || '[]');
+                if (!Array.isArray(tasksRaw)) tasksRaw = [];
+            } catch (err) {
+                console.error('Failed to read tasks from storage', err);
+                tasksRaw = [];
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const upcomingTasks = tasksRaw.filter(t => {
+                if (!isValidTaskObject(t)) return false;
+                if (t.status === 'completed') return false;
+                const due = parseDateSafe(t.dueDate);
+                if (!due) return false;
+                due.setHours(0, 0, 0, 0);
+                return due >= today;
+            }).sort((a, b) => {
+                const da = parseDateSafe(a.dueDate) || new Date(0);
+                const db = parseDateSafe(b.dueDate) || new Date(0);
+                return da - db;
+            }).slice(0, 3);
+
             if (upcomingTasks.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-4">
@@ -660,42 +974,63 @@
                 `;
                 return;
             }
-            
+
             container.innerHTML = upcomingTasks.map(task => {
-                const priorityClass = task.priority === 'high' ? 'bg-error-100' : 
+                const priorityClass = task.priority === 'high' ? 'bg-error-100' :
                                    task.priority === 'medium' ? 'bg-warning-100' : 'bg-success-100';
-                const priorityTextClass = task.priority === 'high' ? 'text-error-600' : 
+                const priorityTextClass = task.priority === 'high' ? 'text-error-600' :
                                         task.priority === 'medium' ? 'text-warning-600' : 'text-success-600';
-                
+
+                const tid = task.id || ('t_' + (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)));
+
                 return `
                     <div class="flex items-center space-x-3 p-3 ${priorityClass} rounded-lg">
-                        <input type="checkbox" class="w-4 h-4 text-primary" />
+                        <input type="checkbox" class="w-4 h-4 text-primary" onchange="completeTaskFromDashboard('${tid}')" ${task.status === 'completed' ? 'checked' : ''} />
                         <div class="flex-1">
-                            <p class="text-sm font-medium text-text-primary">${task.title}</p>
-                            <p class="text-xs ${priorityTextClass}">Due: ${new Date(task.dueDate).toLocaleDateString()}</p>
+                            <p class="text-sm font-medium text-text-primary">${(task.title || '').replace(/</g, "&lt;")}</p>
+                            <p class="text-xs ${priorityTextClass}">Due: ${(() => {
+                                const d = parseDateSafe(task.dueDate);
+                                return d ? d.toLocaleDateString() : task.dueDate;
+                            })()}</p>
                         </div>
                     </div>
                 `;
             }).join('');
         }
 
-        // Toast notifications
+        // Storage listener
+        window.addEventListener('storage', function(e) {
+            if (!e) return;
+            if (e.key === 'calendarEvents') {
+                loadEventsFromStorage();
+                renderCalendar();
+            }
+            if (e.key === 'tasks') {
+                loadUpcomingTasks();
+            }
+            if (e.key === 'schedulerSettings') {
+                loadReminderSettings();
+                renderCalendar();
+            }
+        });
+
+        // Toast
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toastIcon');
             const messageEl = document.getElementById('toastMessage');
-            
+
+            if (!toast || !messageEl || !icon) return;
+
             messageEl.textContent = message;
-            
-            // Set icon based on type
+
             icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
                            type === 'error' ? 'fas fa-exclamation-circle text-error' :
                            'fas fa-info-circle text-accent';
-            
-            // Show toast
+
             toast.classList.remove('translate-x-full');
             toast.classList.add('translate-x-0');
-            
+
             setTimeout(() => {
                 hideToast();
             }, 3000);
@@ -703,51 +1038,50 @@
 
         function hideToast() {
             const toast = document.getElementById('toast');
+            if (!toast) return;
             toast.classList.remove('translate-x-0');
             toast.classList.add('translate-x-full');
         }
 
         // Keyboard shortcuts
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey || event.metaKey) {
-                switch(event.key) {
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
                     case 'n':
-                        event.preventDefault();
-                        window.location.href = 'event_creation.html';
+                        e.preventDefault();
+                        const quickTitle = document.getElementById('quickEventTitle');
+                        if (quickTitle) quickTitle.focus();
                         break;
                     case 't':
-                        event.preventDefault();
+                        e.preventDefault();
                         window.location.href = 'task_management.html';
                         break;
                     case 'f':
-                        event.preventDefault();
+                        e.preventDefault();
                         window.location.href = 'search_and_filter.html';
                         break;
                 }
             }
-            
-            if (event.key === 'Escape') {
+
+            if (e.key === 'Escape') {
                 closeModal();
             }
         });
 
-        // Initialize calendar
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            loadReminderSettings();
+            requestNotificationPermissionIfNeeded();
             loadEventsFromStorage();
             updateCurrentDateDisplay();
             renderCalendar();
             loadUpcomingTasks();
-            
-            // Set default date for quick event form to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('quickEventDate').value = today;
-            
-            // Set initial view
-            const monthBtn = document.querySelector('.view-btn');
-            monthBtn.classList.add('active', 'bg-primary', 'text-white');
-            
-            // Add event listeners for drag and drop cleanup
-            document.addEventListener('dragend', function(event) {
+
+            const todayStr = new Date().toISOString().split('T')[0];
+            const quickDateEl = document.getElementById('quickEventDate');
+            if (quickDateEl) quickDateEl.value = todayStr;
+
+            document.addEventListener('dragend', function() {
                 document.querySelectorAll('.event-item').forEach(eventElement => {
                     eventElement.classList.remove('drag-ghost');
                 });
@@ -755,8 +1089,16 @@
                     zone.classList.remove('drop-zone', 'active');
                 });
             });
+
+            window.addEventListener('focus', () => {
+                loadReminderSettings();
+                loadEventsFromStorage();
+                renderCalendar();
+                loadUpcomingTasks();
+            });
+
+            scheduleRemindersForAllEvents();
         });
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>

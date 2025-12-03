@@ -6,7 +6,7 @@
     <title>Search and Filter - Super Scheduler</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
 </head>
 <body class="bg-background min-h-screen">
     <!-- Header Navigation -->
@@ -26,10 +26,8 @@
                 <!-- Navigation Menu -->
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
+                    <i class="fas fa-calendar-alt mr-2"></i>Dashboard
+                    
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -54,8 +52,7 @@
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
+                    
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -76,7 +73,7 @@
         <!-- Page Header -->
         <div class="mb-6">
             <h2 class="text-2xl font-semibold text-text-primary mb-2">Search & Filter</h2>
-            <p class="text-text-secondary">Find events and tasks quickly with advanced search and filtering options</p>
+            <p class="text-text-secondary">Find events and tasks quickly with search that includes Dashboard and Tasks</p>
         </div>
 
         <div class="flex flex-col lg:flex-row gap-6">
@@ -91,12 +88,12 @@
                     <div class="relative mb-4">
                         <input type="text" id="searchInput" placeholder="Search events and tasks..." class="form-input pl-10 pr-10" oninput="performSearch()" onkeydown="handleSearchKeydown(event)" />
                         <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary"></i>
-                        <button id="clearSearch" onclick="clearSearch()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-primary hidden">
+                        <button id="clearSearch" onclick="clearSearch()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-secondary hover:text-primary hidden" aria-label="Clear search">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
-                    
-                    <!-- Search Suggestions -->
+
+                    <!-- Suggestions (kept visually but functional) -->
                     <div id="searchSuggestions" class="hidden bg-surface border border-slate-200 rounded-md shadow-lg absolute z-10 w-full mt-1">
                         <div class="p-2 space-y-1">
                             <div class="px-3 py-2 hover:bg-slate-50 cursor-pointer rounded text-sm" onclick="selectSuggestion('meeting')">
@@ -151,28 +148,28 @@
                         <label class="block text-sm font-medium text-text-primary mb-2">Categories</label>
                         <div class="space-y-2">
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked class="w-4 h-4 text-primary category-filter" data-category="work" onchange="applyFilters()" />
                                 <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
                                 <span class="text-sm text-text-primary">Work</span>
-                                <span class="text-xs text-text-secondary ml-auto">12</span>
+                                <span class="text-xs text-text-secondary ml-auto">—</span>
                             </label>
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked class="w-4 h-4 text-primary category-filter" data-category="personal" onchange="applyFilters()" />
                                 <div class="w-3 h-3 bg-green-500 rounded-full"></div>
                                 <span class="text-sm text-text-primary">Personal</span>
-                                <span class="text-xs text-text-secondary ml-auto">8</span>
+                                <span class="text-xs text-text-secondary ml-auto">—</span>
                             </label>
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked class="w-4 h-4 text-primary category-filter" data-category="health" onchange="applyFilters()" />
                                 <div class="w-3 h-3 bg-red-500 rounded-full"></div>
                                 <span class="text-sm text-text-primary">Health</span>
-                                <span class="text-xs text-text-secondary ml-auto">3</span>
+                                <span class="text-xs text-text-secondary ml-auto">—</span>
                             </label>
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked class="w-4 h-4 text-primary category-filter" data-category="social" onchange="applyFilters()" />
                                 <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
                                 <span class="text-sm text-text-primary">Social</span>
-                                <span class="text-xs text-text-secondary ml-auto">5</span>
+                                <span class="text-xs text-text-secondary ml-auto">—</span>
                             </label>
                         </div>
                     </div>
@@ -182,84 +179,39 @@
                         <label class="block text-sm font-medium text-text-primary mb-2">Type</label>
                         <div class="space-y-2">
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked id="typeEvents" class="w-4 h-4 text-primary" onchange="applyFilters()" />
                                 <i class="fas fa-calendar-alt text-accent w-4"></i>
                                 <span class="text-sm text-text-primary">Events</span>
-                                <span class="text-xs text-text-secondary ml-auto">18</span>
                             </label>
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked id="typeTasks" class="w-4 h-4 text-primary" onchange="applyFilters()" />
                                 <i class="fas fa-tasks text-warning w-4"></i>
                                 <span class="text-sm text-text-primary">Tasks</span>
-                                <span class="text-xs text-text-secondary ml-auto">10</span>
                             </label>
                         </div>
                     </div>
 
-                    <!-- Status Filter -->
+                    <!-- Status Filter (applies to tasks) -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-text-primary mb-2">Status</label>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Status (tasks)</label>
                         <div class="space-y-2">
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked class="w-4 h-4 text-primary status-filter" data-status="completed" onchange="applyFilters()" />
                                 <div class="w-3 h-3 bg-success rounded-full"></div>
                                 <span class="text-sm text-text-primary">Completed</span>
-                                <span class="text-xs text-text-secondary ml-auto">15</span>
                             </label>
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked class="w-4 h-4 text-primary status-filter" data-status="pending" onchange="applyFilters()" />
                                 <div class="w-3 h-3 bg-warning rounded-full"></div>
                                 <span class="text-sm text-text-primary">Pending</span>
-                                <span class="text-xs text-text-secondary ml-auto">8</span>
                             </label>
                             <label class="flex items-center space-x-3 cursor-pointer">
-                                <input type="checkbox" checked class="w-4 h-4 text-primary" onchange="applyFilters()" />
+                                <input type="checkbox" checked class="w-4 h-4 text-primary status-filter" data-status="overdue" onchange="applyFilters()" />
                                 <div class="w-3 h-3 bg-error rounded-full"></div>
                                 <span class="text-sm text-text-primary">Overdue</span>
-                                <span class="text-xs text-text-secondary ml-auto">5</span>
                             </label>
                         </div>
                     </div>
-                </div>
-
-                <!-- Saved Searches -->
-                <div class="card p-6">
-                    <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
-                        <i class="fas fa-bookmark text-accent mr-2"></i>
-                        Saved Searches
-                    </h3>
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between p-2 hover:bg-slate-50 rounded cursor-pointer" onclick="loadSavedSearch('work-meetings')">
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-search text-text-secondary text-sm"></i>
-                                <span class="text-sm text-text-primary">Work Meetings</span>
-                            </div>
-                            <button onclick="deleteSavedSearch('work-meetings', event)" class="text-text-secondary hover:text-error">
-                                <i class="fas fa-times text-xs"></i>
-                            </button>
-                        </div>
-                        <div class="flex items-center justify-between p-2 hover:bg-slate-50 rounded cursor-pointer" onclick="loadSavedSearch('health-appointments')">
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-search text-text-secondary text-sm"></i>
-                                <span class="text-sm text-text-primary">Health Appointments</span>
-                            </div>
-                            <button onclick="deleteSavedSearch('health-appointments', event)" class="text-text-secondary hover:text-error">
-                                <i class="fas fa-times text-xs"></i>
-                            </button>
-                        </div>
-                        <div class="flex items-center justify-between p-2 hover:bg-slate-50 rounded cursor-pointer" onclick="loadSavedSearch('overdue-tasks')">
-                            <div class="flex items-center space-x-2">
-                                <i class="fas fa-search text-text-secondary text-sm"></i>
-                                <span class="text-sm text-text-primary">Overdue Tasks</span>
-                            </div>
-                            <button onclick="deleteSavedSearch('overdue-tasks', event)" class="text-text-secondary hover:text-error">
-                                <i class="fas fa-times text-xs"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <button onclick="saveCurrentSearch()" class="w-full mt-4 text-sm text-primary hover:text-primary-700 font-medium">
-                        <i class="fas fa-plus mr-2"></i>Save Current Search
-                    </button>
                 </div>
             </aside>
 
@@ -271,250 +223,22 @@
                         <div class="flex items-center space-x-4">
                             <h3 class="text-lg font-semibold text-text-primary">
                                 Search Results
-                                <span id="resultCount" class="text-sm font-normal text-text-secondary ml-2">(28 items)</span>
+                                <span id="resultCount" class="text-sm font-normal text-text-secondary ml-2">(0 items)</span>
                             </h3>
                         </div>
-                        
-                        <!-- View Toggle and Sort -->
-                        <div class="flex items-center space-x-4">
-                            <!-- Sort Options -->
-                            <div class="flex items-center space-x-2">
-                                <label class="text-sm text-text-secondary">Sort by:</label>
-                                <select id="sortBy" class="form-input text-sm w-auto" onchange="sortResults()">
-                                    <option value="relevance">Relevance</option>
-                                    <option value="date">Date</option>
-                                    <option value="category">Category</option>
-                                    <option value="title">Title</option>
-                                </select>
-                            </div>
 
-                            <!-- View Toggle -->
-                            <div class="flex items-center space-x-2 bg-slate-100 rounded-lg p-1">
-                                <button onclick="changeView('list')" class="view-btn active px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                                    <i class="fas fa-list mr-1"></i>List
-                                </button>
-                                <button onclick="changeView('timeline')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                                    <i class="fas fa-clock mr-1"></i>Timeline
-                                </button>
-                                <button onclick="changeView('compact')" class="view-btn px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                                    <i class="fas fa-th-list mr-1"></i>Compact
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Active Filters Display -->
-                    <div id="activeFilters" class="flex flex-wrap gap-2 mt-4">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-primary-100 text-primary-700">
-                            Work Category
-                            <button onclick="removeFilter('category', 'work')" class="ml-2 text-primary-500 hover:text-primary-700">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </span>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs bg-accent-100 text-accent-700">
-                            This Week
-                            <button onclick="removeFilter('date', 'week')" class="ml-2 text-accent-500 hover:text-accent-700">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </span>
+                        <!-- Active Filters Display -->
+                        <div id="activeFilters" class="flex flex-wrap gap-2 mt-4 sm:mt-0"></div>
                     </div>
                 </div>
 
                 <!-- Search Results List -->
                 <div id="searchResults" class="space-y-4">
-                    <!-- Result Item 1 -->
-                    <div class="card p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                    <span class="text-xs text-text-secondary uppercase tracking-wide">Work Event</span>
-                                    <span class="text-xs text-text-secondary">•</span>
-                                    <span class="text-xs text-text-secondary">Oct 1, 2025 at 9:00 AM</span>
-                                </div>
-                                <h4 class="text-lg font-medium text-text-primary mb-2">
-                                    Client <mark class="bg-yellow-200 px-1 rounded">Meeting</mark> - Q4 Review
-                                </h4>
-                                <p class="text-sm text-text-secondary mb-3">
-                                    Quarterly business review with key stakeholders to discuss performance metrics and upcoming initiatives.
-                                </p>
-                                <div class="flex items-center space-x-4 text-xs text-text-secondary">
-                                    <span><i class="fas fa-clock mr-1"></i>2 hours</span>
-                                    <span><i class="fas fa-map-marker-alt mr-1"></i>Conference Room A</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-error-100 text-error-700">
-                                        <i class="fas fa-exclamation-triangle mr-1"></i>Conflict
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 ml-4">
-                                <button onclick="editItem('event-1')" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-50 rounded-md transition-colors" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="viewItem('event-1')" class="p-2 text-text-secondary hover:text-accent hover:bg-slate-50 rounded-md transition-colors" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="deleteItem('event-1')" class="p-2 text-text-secondary hover:text-error hover:bg-slate-50 rounded-md transition-colors" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Result Item 2 -->
-                    <div class="card p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                                    <span class="text-xs text-text-secondary uppercase tracking-wide">Personal Task</span>
-                                    <span class="text-xs text-text-secondary">•</span>
-                                    <span class="text-xs text-text-secondary">Due: Oct 2, 2025</span>
-                                </div>
-                                <h4 class="text-lg font-medium text-text-primary mb-2">
-                                    <mark class="bg-yellow-200 px-1 rounded">Project</mark> Presentation Preparation
-                                </h4>
-                                <p class="text-sm text-text-secondary mb-3">
-                                    Prepare slides and talking points for the quarterly project review presentation.
-                                </p>
-                                <div class="flex items-center space-x-4 text-xs text-text-secondary">
-                                    <span><i class="fas fa-tasks mr-1"></i>Task</span>
-                                    <span><i class="fas fa-flag mr-1"></i>High Priority</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-warning-100 text-warning-700">
-                                        <i class="fas fa-clock mr-1"></i>Due Soon
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 ml-4">
-                                <button onclick="editItem('task-1')" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-50 rounded-md transition-colors" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="viewItem('task-1')" class="p-2 text-text-secondary hover:text-accent hover:bg-slate-50 rounded-md transition-colors" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="completeTask('task-1')" class="p-2 text-text-secondary hover:text-success hover:bg-slate-50 rounded-md transition-colors" title="Mark Complete">
-                                    <i class="fas fa-check"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Result Item 3 -->
-                    <div class="card p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                                    <span class="text-xs text-text-secondary uppercase tracking-wide">Health Event</span>
-                                    <span class="text-xs text-text-secondary">•</span>
-                                    <span class="text-xs text-text-secondary">Oct 7, 2025 at 11:00 AM</span>
-                                </div>
-                                <h4 class="text-lg font-medium text-text-primary mb-2">
-                                    Doctor <mark class="bg-yellow-200 px-1 rounded">Appointment</mark> - Annual Checkup
-                                </h4>
-                                <p class="text-sm text-text-secondary mb-3">
-                                    Annual physical examination and health screening with Dr. Sarah Johnson.
-                                </p>
-                                <div class="flex items-center space-x-4 text-xs text-text-secondary">
-                                    <span><i class="fas fa-clock mr-1"></i>1 hour</span>
-                                    <span><i class="fas fa-map-marker-alt mr-1"></i>Medical Center</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-success-100 text-success-700">
-                                        <i class="fas fa-check mr-1"></i>Confirmed
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 ml-4">
-                                <button onclick="editItem('event-2')" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-50 rounded-md transition-colors" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="viewItem('event-2')" class="p-2 text-text-secondary hover:text-accent hover:bg-slate-50 rounded-md transition-colors" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="deleteItem('event-2')" class="p-2 text-text-secondary hover:text-error hover:bg-slate-50 rounded-md transition-colors" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Result Item 4 -->
-                    <div class="card p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                    <span class="text-xs text-text-secondary uppercase tracking-wide">Work Task</span>
-                                    <span class="text-xs text-text-secondary">•</span>
-                                    <span class="text-xs text-text-secondary">Due: Oct 4, 2025</span>
-                                </div>
-                                <h4 class="text-lg font-medium text-text-primary mb-2">
-                                    Weekly <mark class="bg-yellow-200 px-1 rounded">Project</mark> Status Report
-                                </h4>
-                                <p class="text-sm text-text-secondary mb-3">
-                                    Compile and submit the weekly progress report for all active projects to management.
-                                </p>
-                                <div class="flex items-center space-x-4 text-xs text-text-secondary">
-                                    <span><i class="fas fa-tasks mr-1"></i>Task</span>
-                                    <span><i class="fas fa-flag mr-1"></i>Medium Priority</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-success-100 text-success-700">
-                                        <i class="fas fa-check mr-1"></i>Completed
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 ml-4">
-                                <button onclick="editItem('task-2')" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-50 rounded-md transition-colors" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="viewItem('task-2')" class="p-2 text-text-secondary hover:text-accent hover:bg-slate-50 rounded-md transition-colors" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="deleteItem('task-2')" class="p-2 text-text-secondary hover:text-error hover:bg-slate-50 rounded-md transition-colors" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Result Item 5 -->
-                    <div class="card p-6 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
-                                    <span class="text-xs text-text-secondary uppercase tracking-wide">Social Event</span>
-                                    <span class="text-xs text-text-secondary">•</span>
-                                    <span class="text-xs text-text-secondary">Oct 10, 2025 at 8:00 PM</span>
-                                </div>
-                                <h4 class="text-lg font-medium text-text-primary mb-2">
-                                    Movie Night with Friends
-                                </h4>
-                                <p class="text-sm text-text-secondary mb-3">
-                                    Weekly movie night at Sarah's place. This week: watching the latest Marvel movie with pizza and snacks.
-                                </p>
-                                <div class="flex items-center space-x-4 text-xs text-text-secondary">
-                                    <span><i class="fas fa-clock mr-1"></i>3 hours</span>
-                                    <span><i class="fas fa-map-marker-alt mr-1"></i>Sarah's House</span>
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full bg-accent-100 text-accent-700">
-                                        <i class="fas fa-users mr-1"></i>5 Attendees
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex items-center space-x-2 ml-4">
-                                <button onclick="editItem('event-3')" class="p-2 text-text-secondary hover:text-primary hover:bg-slate-50 rounded-md transition-colors" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="viewItem('event-3')" class="p-2 text-text-secondary hover:text-accent hover:bg-slate-50 rounded-md transition-colors" title="View Details">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button onclick="deleteItem('event-3')" class="p-2 text-text-secondary hover:text-error hover:bg-slate-50 rounded-md transition-colors" title="Delete">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Results will be rendered here -->
                 </div>
 
                 <!-- Load More Button -->
-                <div class="text-center mt-8">
+                <div class="text-center mt-8" id="loadMoreWrapper" style="display:none;">
                     <button onclick="loadMoreResults()" class="btn-secondary">
                         <i class="fas fa-chevron-down mr-2"></i>Load More Results
                     </button>
@@ -538,96 +262,469 @@
         </div>
     </div>
 
-    <!-- Save Search Modal -->
-    <div id="saveSearchModal" class="modal-overlay hidden" onclick="closeModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-text-primary">Save Search</h3>
-                <button onclick="closeModal()" class="text-text-secondary hover:text-text-primary">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <form onsubmit="saveSearch(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-text-primary mb-1">Search Name</label>
-                    <input type="text" id="searchName" class="form-input" placeholder="Enter a name for this search..." required />
-                </div>
-                <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" onclick="closeModal()" class="btn-secondary">Cancel</button>
-                    <button type="submit" class="btn-primary">Save Search</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- Save Search Modal removed per your request -->
 
     <script>
-        // Mobile menu toggle
+        // --------- Utility & UI helpers ---------
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('hidden');
         }
 
-        // Search functionality
-        function performSearch() {
-            const searchInput = document.getElementById('searchInput');
-            const clearButton = document.getElementById('clearSearch');
-            const suggestions = document.getElementById('searchSuggestions');
-            
-            if (searchInput.value.length > 0) {
-                clearButton.classList.remove('hidden');
-                // Show suggestions for demo
-                if (searchInput.value.length > 2) {
-                    suggestions.classList.remove('hidden');
-                }
-            } else {
-                clearButton.classList.add('hidden');
-                suggestions.classList.add('hidden');
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+
+            messageEl.textContent = message;
+            icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
+                           type === 'error' ? 'fas fa-exclamation-circle text-error' :
+                           'fas fa-info-circle text-accent';
+
+            toast.classList.add('show');
+            setTimeout(() => hideToast(), 3000);
+        }
+
+        function hideToast() {
+            document.getElementById('toast').classList.remove('show');
+        }
+
+        // --------- Data loading ---------
+        function loadAllEvents() {
+            try {
+                const raw = localStorage.getItem('calendarEvents') || '[]';
+                return JSON.parse(raw);
+            } catch (e) {
+                console.error('Failed to parse calendarEvents', e);
+                return [];
             }
-            
-            // Simulate search results update
-            updateResultCount();
-            highlightSearchTerms();
+        }
+
+        function loadAllTasks() {
+            try {
+                const raw = localStorage.getItem('tasks') || '[]';
+                return JSON.parse(raw);
+            } catch (e) {
+                console.error('Failed to parse tasks', e);
+                return [];
+            }
+        }
+
+        function getTaskStatus(task) {
+            if (!task) return 'pending';
+            if (task.status === 'completed') return 'completed';
+            const due = new Date(task.dueDate);
+            const now = new Date();
+            if (isNaN(due.getTime())) return 'pending';
+            return due < now ? 'overdue' : 'pending';
+        }
+
+        // --------- Search & Filter Logic ---------
+        function performSearch() {
+            const term = document.getElementById('searchInput').value.trim().toLowerCase();
+            document.getElementById('clearSearch').classList.toggle('hidden', term.length === 0);
+
+            // Show suggestions when user typed >2 chars
+            const suggestions = document.getElementById('searchSuggestions');
+            if (term.length > 2) suggestions.classList.remove('hidden');
+            else suggestions.classList.add('hidden');
+
+            applyFilters(); // perform filtering + searching
         }
 
         function clearSearch() {
             document.getElementById('searchInput').value = '';
             document.getElementById('clearSearch').classList.add('hidden');
             document.getElementById('searchSuggestions').classList.add('hidden');
-            updateResultCount();
-            removeHighlights();
+            applyFilters();
         }
 
         function selectSuggestion(term) {
             document.getElementById('searchInput').value = term;
             document.getElementById('searchSuggestions').classList.add('hidden');
-            performSearch();
+            applyFilters();
         }
 
-        function handleSearchKeydown(event) {
-            if (event.key === 'Escape') {
+        function handleSearchKeydown(e) {
+            if (e.key === 'Escape') {
                 document.getElementById('searchSuggestions').classList.add('hidden');
             }
         }
 
-        // Filter functionality
         function applyFilters() {
-            updateResultCount();
-            showToast('Filters applied successfully', 'success');
+            // gather raw data
+            const allEvents = loadAllEvents();
+            const allTasks = loadAllTasks();
+
+            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const startDateVal = document.getElementById('startDate').value;
+            const endDateVal = document.getElementById('endDate').value;
+
+            // categories
+            const selectedCategories = Array.from(document.querySelectorAll('.category-filter'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.dataset.category);
+
+            // type
+            const showEvents = document.getElementById('typeEvents').checked;
+            const showTasks = document.getElementById('typeTasks').checked;
+
+            // statuses
+            const selectedStatuses = Array.from(document.querySelectorAll('.status-filter'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.dataset.status);
+
+            // filter events
+            let events = allEvents.slice();
+            if (searchTerm) {
+                events = events.filter(ev =>
+                    (ev.title && ev.title.toLowerCase().includes(searchTerm)) ||
+                    (ev.description && ev.description.toLowerCase().includes(searchTerm)) ||
+                    (ev.location && ev.location.toLowerCase().includes(searchTerm))
+                );
+            }
+            if (selectedCategories.length) {
+                events = events.filter(ev => selectedCategories.includes(ev.category));
+            }
+            if (startDateVal && endDateVal) {
+                const start = new Date(startDateVal);
+                const end = new Date(endDateVal);
+                events = events.filter(ev => {
+                    const d = new Date(ev.date);
+                    return !isNaN(d.getTime()) && d >= start && d <= end;
+                });
+            }
+
+            // filter tasks
+            let tasks = allTasks.slice();
+            if (searchTerm) {
+                tasks = tasks.filter(t =>
+                    (t.title && t.title.toLowerCase().includes(searchTerm)) ||
+                    (t.description && t.description.toLowerCase().includes(searchTerm))
+                );
+            }
+            if (selectedCategories.length) {
+                tasks = tasks.filter(t => selectedCategories.includes(t.category));
+            }
+            if (startDateVal && endDateVal) {
+                const start = new Date(startDateVal);
+                const end = new Date(endDateVal);
+                tasks = tasks.filter(t => {
+                    const d = new Date(t.dueDate);
+                    return !isNaN(d.getTime()) && d >= start && d <= end;
+                });
+            }
+
+            // apply type toggles
+            if (!showEvents) events = [];
+            if (!showTasks) tasks = [];
+
+            // map into unified results
+            const results = [];
+            events.forEach(ev => results.push({ type: 'event', id: ev.id, title: ev.title, description: ev.description || '', date: ev.date, time: ev.time, category: ev.category, raw: ev }));
+            tasks.forEach(t => results.push({ type: 'task', id: t.id, title: t.title, description: t.description || '', dueDate: t.dueDate, category: t.category, status: getTaskStatus(t), raw: t }));
+
+            // status filtering (only for tasks)
+            let finalResults = results;
+            if (selectedStatuses.length > 0) {
+                finalResults = results.filter(r => {
+                    if (r.type === 'task') return selectedStatuses.includes(r.status);
+                    return true; // keep events
+                });
+            }
+
+            // sort by date (events by date, tasks by dueDate) newest-first
+            finalResults.sort((a, b) => {
+                const da = a.type === 'event' ? (a.date ? new Date(a.date) : new Date(0)) : (a.dueDate ? new Date(a.dueDate) : new Date(0));
+                const db = b.type === 'event' ? (b.date ? new Date(b.date) : new Date(0)) : (b.dueDate ? new Date(b.dueDate) : new Date(0));
+                return db - da;
+            });
+
+            renderResults(finalResults);
+            updateResultCount(finalResults.length);
+            updateActiveFiltersDisplay(selectedCategories, startDateVal, endDateVal, showEvents, showTasks, selectedStatuses);
+        }
+
+        function renderResults(results) {
+            const container = document.getElementById('searchResults');
+            container.innerHTML = '';
+
+            if (!results.length) {
+                container.innerHTML = `
+                    <div class="card p-6 text-center">
+                        <p class="text-sm text-text-secondary">No results found</p>
+                    </div>
+                `;
+                document.getElementById('loadMoreWrapper').style.display = 'none';
+                return;
+            }
+
+            // Render each result using card style similar to examples
+            results.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 hover:shadow-md transition-shadow';
+
+                const left = document.createElement('div');
+                left.className = 'flex-1';
+
+                // header info (category dot, type, date)
+                const headerRow = document.createElement('div');
+                headerRow.className = 'flex items-center space-x-3 mb-2';
+
+                const dot = document.createElement('div');
+                dot.className = 'w-3 h-3 rounded-full ' + getCategoryDotClass(item.category);
+                headerRow.appendChild(dot);
+
+                const typeSpan = document.createElement('span');
+                typeSpan.className = 'text-xs text-text-secondary uppercase tracking-wide';
+                typeSpan.textContent = item.type === 'event' ? 'Event' : 'Task';
+                headerRow.appendChild(typeSpan);
+
+                const sep = document.createElement('span');
+                sep.className = 'text-xs text-text-secondary';
+                sep.textContent = '•';
+                headerRow.appendChild(sep);
+
+                const dateSpan = document.createElement('span');
+                dateSpan.className = 'text-xs text-text-secondary';
+                dateSpan.textContent = item.type === 'event' ? (item.date ? formatDateVerbose(item.date, item.time) : 'No date') : (item.dueDate ? `Due: ${new Date(item.dueDate).toLocaleDateString()}` : 'No due date');
+                headerRow.appendChild(dateSpan);
+
+                // title
+                const titleH4 = document.createElement('h4');
+                titleH4.className = 'text-lg font-medium text-text-primary mb-2';
+                titleH4.innerHTML = escapeHtml(item.title || '(No title)');
+
+                // description
+                const p = document.createElement('p');
+                p.className = 'text-sm text-text-secondary mb-3';
+                p.textContent = item.description || '';
+
+                // badges/actions row
+                const actionsRow = document.createElement('div');
+                actionsRow.className = 'flex items-center space-x-4 text-xs text-text-secondary';
+                if (item.type === 'event') {
+                    const durSpan = document.createElement('span');
+                    durSpan.innerHTML = `<i class="fas fa-clock mr-1"></i>${item.time || '—'}`;
+                    actionsRow.appendChild(durSpan);
+                } else {
+                    const taskSpan = document.createElement('span');
+                    taskSpan.innerHTML = `<i class="fas fa-tasks mr-1"></i>Task`;
+                    actionsRow.appendChild(taskSpan);
+
+                    const statusBadge = document.createElement('span');
+                    const status = item.status || getTaskStatus(item.raw);
+                    if (status === 'completed') {
+                        statusBadge.className = 'inline-flex items-center px-2 py-1 rounded-full bg-success-100 text-success-700';
+                        statusBadge.innerHTML = '<i class="fas fa-check mr-1"></i>Completed';
+                    } else if (status === 'overdue') {
+                        statusBadge.className = 'inline-flex items-center px-2 py-1 rounded-full bg-error-100 text-error-700';
+                        statusBadge.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i>Overdue';
+                    } else {
+                        statusBadge.className = 'inline-flex items-center px-2 py-1 rounded-full bg-warning-100 text-warning-700';
+                        statusBadge.innerHTML = '<i class="fas fa-clock mr-1"></i>Pending';
+                    }
+                    actionsRow.appendChild(statusBadge);
+                }
+
+                // right-side action buttons
+                const rightActions = document.createElement('div');
+                rightActions.className = 'flex items-center space-x-2 ml-4';
+                rightActions.innerHTML = `
+                    <button class="p-2 text-text-secondary hover:text-primary hover:bg-slate-50 rounded-md transition-colors" title="Edit" onclick="editItem('${item.type}-${item.id}')"><i class="fas fa-edit"></i></button>
+                    <button class="p-2 text-text-secondary hover:text-accent hover:bg-slate-50 rounded-md transition-colors" title="View" onclick="viewItem('${item.type}-${item.id}')"><i class="fas fa-eye"></i></button>
+                    <button class="p-2 text-text-secondary hover:text-error hover:bg-slate-50 rounded-md transition-colors" title="Delete" onclick="deleteItem('${item.type}-${item.id}', this)"><i class="fas fa-trash"></i></button>
+                `;
+
+                // assemble
+                left.appendChild(headerRow);
+                left.appendChild(titleH4);
+                left.appendChild(p);
+                left.appendChild(actionsRow);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'flex items-start justify-between';
+                wrapper.appendChild(left);
+                wrapper.appendChild(rightActions);
+
+                card.appendChild(wrapper);
+                document.getElementById('searchResults').appendChild(card);
+            });
+
+            // Show load more if many results (we keep hidden for now)
+            document.getElementById('loadMoreWrapper').style.display = 'none';
+        }
+
+        function formatDateVerbose(dateStr, timeStr) {
+            if (!dateStr) return '';
+            try {
+                const d = new Date(dateStr);
+                const datePart = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+                if (timeStr) {
+                    // try parse time "HH:MM" and format
+                    return `${datePart} at ${timeStr}`;
+                }
+                return datePart;
+            } catch {
+                return dateStr;
+            }
+        }
+
+        function getCategoryDotClass(category) {
+            switch (category) {
+                case 'work': return 'bg-blue-500';
+                case 'personal': return 'bg-green-500';
+                case 'health': return 'bg-red-500';
+                case 'social': return 'bg-purple-500';
+                default: return 'bg-slate-400';
+            }
+        }
+
+        function escapeHtml(s) {
+            if (!s) return '';
+            return s.replace(/[&<>"']/g, function (m) {
+                return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m];
+            });
+        }
+
+        // --------- Actions (edit/view/delete) ---------
+        function editItem(id) {
+            // id format: "event-<id>" or "task-<id>"
+            if (!id) return;
+            if (id.startsWith('event-')) {
+                // routing: open dashboard event edit (keeps search disconnected from create-event page)
+                const rawId = id.split('-').slice(1).join('-');
+                // If you have an edit route/modal, hook it here. As placeholder, navigate to dashboard and attempt to open
+                // For now navigate to calendar dashboard; user requested no reliance on create-event tab.
+                window.location.href = 'calendar_dashboard.html';
+            } else {
+                window.location.href = 'task_management.html';
+            }
+        }
+
+        function viewItem(id) {
+            showToast('Opening item details...', 'info');
+            // Real implementation would open a modal. For now placeholder.
+        }
+
+        function deleteItem(id, el) {
+            if (!confirm('Are you sure you want to delete this item?')) return;
+            if (!id) return;
+
+            if (id.startsWith('event-')) {
+                const rawId = id.split('-').slice(1).join('-');
+                let events = loadAllEvents();
+                events = events.filter(e => e.id !== rawId);
+                localStorage.setItem('calendarEvents', JSON.stringify(events));
+            } else {
+                const rawId = id.split('-').slice(1).join('-');
+                let tasks = loadAllTasks();
+                tasks = tasks.filter(t => t.id !== rawId);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+            }
+
+            // Remove the card from DOM for immediate feedback
+            const card = el ? el.closest('.card') : null;
+            if (card) card.remove();
+
+            // Re-run filters
+            applyFilters();
+            showToast('Item deleted successfully', 'success');
+        }
+
+        function completeTask(id) {
+            // mark a task completed (id may come from task-<id>)
+            if (!id) return;
+            const rawId = id.split('-').slice(1).join('-');
+            const tasks = loadAllTasks().map(t => {
+                if (t.id === rawId) {
+                    t.status = 'completed';
+                }
+                return t;
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            applyFilters();
+            showToast('Task marked complete', 'success');
+        }
+
+        // --------- Filters UI helpers ---------
+        function updateResultCount(count) {
+            document.getElementById('resultCount').textContent = `(${count} items)`;
+        }
+
+        function updateActiveFiltersDisplay(categories, startDateVal, endDateVal, showEvents, showTasks, statuses) {
+            const out = document.getElementById('activeFilters');
+            out.innerHTML = '';
+
+            if (categories && categories.length) {
+                categories.forEach(cat => {
+                    const span = document.createElement('span');
+                    span.className = 'inline-flex items-center px-3 py-1 rounded-full text-xs bg-primary-100 text-primary-700';
+                    span.innerHTML = `${cat.charAt(0).toUpperCase() + cat.slice(1)} <button onclick="removeFilterAndApply('category','${cat}')" class="ml-2 text-primary-500 hover:text-primary-700"><i class="fas fa-times"></i></button>`;
+                    out.appendChild(span);
+                });
+            }
+
+            if (startDateVal && endDateVal) {
+                const span = document.createElement('span');
+                span.className = 'inline-flex items-center px-3 py-1 rounded-full text-xs bg-accent-100 text-accent-700';
+                span.innerHTML = `From ${startDateVal} to ${endDateVal} <button onclick="removeFilterAndApply('date')" class="ml-2 text-accent-500 hover:text-accent-700"><i class="fas fa-times"></i></button>`;
+                out.appendChild(span);
+            }
+
+            if (!showEvents) {
+                const span = document.createElement('span');
+                span.className = 'inline-flex items-center px-3 py-1 rounded-full text-xs bg-slate-100 text-text-secondary';
+                span.innerHTML = `Events hidden <button onclick="toggleType('events')" class="ml-2 text-text-secondary hover:text-primary"><i class="fas fa-eye"></i></button>`;
+                out.appendChild(span);
+            }
+            if (!showTasks) {
+                const span = document.createElement('span');
+                span.className = 'inline-flex items-center px-3 py-1 rounded-full text-xs bg-slate-100 text-text-secondary';
+                span.innerHTML = `Tasks hidden <button onclick="toggleType('tasks')" class="ml-2 text-text-secondary hover:text-primary"><i class="fas fa-eye"></i></button>`;
+                out.appendChild(span);
+            }
+
+            if (statuses && statuses.length) {
+                statuses.forEach(st => {
+                    const span = document.createElement('span');
+                    span.className = 'inline-flex items-center px-3 py-1 rounded-full text-xs bg-warning-100 text-warning-700';
+                    span.innerHTML = `${st.charAt(0).toUpperCase() + st.slice(1)} <button onclick="removeFilterAndApply('status','${st}')" class="ml-2 text-warning-500 hover:text-warning-700"><i class="fas fa-times"></i></button>`;
+                    out.appendChild(span);
+                });
+            }
+        }
+
+        function removeFilterAndApply(type, value) {
+            if (type === 'category') {
+                document.querySelectorAll(`.category-filter[data-category="${value}"]`).forEach(cb => cb.checked = false);
+            } else if (type === 'date') {
+                document.getElementById('startDate').value = '';
+                document.getElementById('endDate').value = '';
+            } else if (type === 'status') {
+                document.querySelectorAll(`.status-filter[data-status="${value}"]`).forEach(cb => cb.checked = false);
+            }
+            applyFilters();
+        }
+
+        function toggleType(which) {
+            if (which === 'events') {
+                const el = document.getElementById('typeEvents');
+                el.checked = !el.checked;
+            } else {
+                const el = document.getElementById('typeTasks');
+                el.checked = !el.checked;
+            }
+            applyFilters();
         }
 
         function clearAllFilters() {
-            // Reset all checkboxes
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => cb.checked = true);
-            
-            // Reset date inputs
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
             document.getElementById('startDate').value = '';
             document.getElementById('endDate').value = '';
-            
-            // Clear active filters display
-            document.getElementById('activeFilters').innerHTML = '';
-            
-            updateResultCount();
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearch').classList.add('hidden');
+            applyFilters();
             showToast('All filters cleared', 'info');
         }
 
@@ -635,212 +732,66 @@
             const today = new Date();
             const startDate = document.getElementById('startDate');
             const endDate = document.getElementById('endDate');
-            
-            switch(range) {
-                case 'today':
-                    startDate.value = today.toISOString().split('T')[0];
-                    endDate.value = today.toISOString().split('T')[0];
-                    break;
-                case 'week':
-                    const weekStart = new Date(today.setDate(today.getDate() - today.getDay()));
-                    const weekEnd = new Date(today.setDate(today.getDate() - today.getDay() + 6));
-                    startDate.value = weekStart.toISOString().split('T')[0];
-                    endDate.value = weekEnd.toISOString().split('T')[0];
-                    break;
-                case 'month':
-                    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-                    const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                    startDate.value = monthStart.toISOString().split('T')[0];
-                    endDate.value = monthEnd.toISOString().split('T')[0];
-                    break;
+
+            if (range === 'today') {
+                startDate.value = today.toISOString().split('T')[0];
+                endDate.value = today.toISOString().split('T')[0];
+            } else if (range === 'week') {
+                const weekStart = new Date(today);
+                weekStart.setDate(today.getDate() - today.getDay());
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+                startDate.value = weekStart.toISOString().split('T')[0];
+                endDate.value = weekEnd.toISOString().split('T')[0];
+            } else if (range === 'month') {
+                const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                startDate.value = monthStart.toISOString().split('T')[0];
+                endDate.value = monthEnd.toISOString().split('T')[0];
             }
             applyFilters();
         }
 
-        function removeFilter(type, value) {
-            // Remove filter logic here
-            showToast(`${type} filter removed`, 'info');
-            updateResultCount();
-        }
-
-        // View toggle functionality
-        function changeView(view) {
-            const buttons = document.querySelectorAll('.view-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('text-text-secondary', 'hover:text-primary');
-            });
-            
-            event.target.classList.add('active', 'bg-primary', 'text-white');
-            event.target.classList.remove('text-text-secondary', 'hover:text-primary');
-            
-            showToast(`Switched to ${view} view`, 'info');
-        }
-
-        // Sort functionality
-        function sortResults() {
-            const sortBy = document.getElementById('sortBy').value;
-            showToast(`Results sorted by ${sortBy}`, 'info');
-        }
-
-        // Result actions
-        function editItem(itemId) {
-            if (itemId.startsWith('event')) {
-                window.location.href = 'event_creation.html';
-            } else {
-                window.location.href = 'task_management.html';
-            }
-        }
-
-        function viewItem(itemId) {
-            showToast('Opening item details...', 'info');
-            // In a real app, this would open a detail modal or navigate to detail page
-        }
-
-        function deleteItem(itemId) {
-            if (confirm('Are you sure you want to delete this item?')) {
-                showToast('Item deleted successfully', 'success');
-                // Remove item from DOM
-                event.target.closest('.card').remove();
-                updateResultCount();
-            }
-        }
-
-        function completeTask(taskId) {
-            showToast('Task marked as complete', 'success');
-            // Update task status in DOM
-            const taskCard = event.target.closest('.card');
-            const statusBadge = taskCard.querySelector('.bg-warning-100');
-            if (statusBadge) {
-                statusBadge.className = 'inline-flex items-center px-2 py-1 rounded-full bg-success-100 text-success-700';
-                statusBadge.innerHTML = '<i class="fas fa-check mr-1"></i>Completed';
-            }
-        }
-
-        // Saved searches
-        function loadSavedSearch(searchId) {
-            showToast(`Loaded saved search: ${searchId}`, 'info');
-            // Load search criteria and apply filters
-        }
-
-        function deleteSavedSearch(searchId, event) {
-            event.stopPropagation();
-            if (confirm('Delete this saved search?')) {
-                event.target.closest('div').remove();
-                showToast('Saved search deleted', 'success');
-            }
-        }
-
-        function saveCurrentSearch() {
-            document.getElementById('saveSearchModal').classList.remove('hidden');
-            setTimeout(() => {
-                document.querySelector('.modal-content').classList.add('show');
-            }, 10);
-        }
-
-        function saveSearch(event) {
-            event.preventDefault();
-            const searchName = document.getElementById('searchName').value;
-            showToast(`Search "${searchName}" saved successfully`, 'success');
-            closeModal();
-            document.getElementById('searchName').value = '';
-        }
-
-        function closeModal(event) {
-            if (event && event.target !== event.currentTarget) return;
-            
-            document.querySelector('.modal-content').classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('saveSearchModal').classList.add('hidden');
-            }, 300);
-        }
-
-        // Utility functions
-        function updateResultCount() {
-            const count = Math.floor(Math.random() * 50) + 10; // Random count for demo
-            document.getElementById('resultCount').textContent = `(${count} items)`;
-        }
-
-        function highlightSearchTerms() {
-            // This would highlight search terms in results
-            // Already implemented in the HTML with <mark> tags for demo
-        }
-
-        function removeHighlights() {
-            // Remove highlighting from search terms
-        }
-
-        function loadMoreResults() {
-            showToast('Loading more results...', 'info');
-            // In a real app, this would load additional results
-        }
-
-        // Toast notifications
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const icon = document.getElementById('toastIcon');
-            const messageEl = document.getElementById('toastMessage');
-            
-            messageEl.textContent = message;
-            
-            // Set icon based on type
-            icon.className = type === 'success' ? 'fas fa-check-circle text-success' :
-                           type === 'error' ? 'fas fa-exclamation-circle text-error' :
-                           'fas fa-info-circle text-accent';
-            
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                hideToast();
-            }, 3000);
-        }
-
-        function hideToast() {
-            document.getElementById('toast').classList.remove('show');
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(event) {
-            if (event.ctrlKey || event.metaKey) {
-                switch(event.key) {
-                    case 'f':
-                        event.preventDefault();
-                        document.getElementById('searchInput').focus();
-                        break;
-                    case 'k':
-                        event.preventDefault();
-                        document.getElementById('searchInput').focus();
-                        break;
-                }
-            }
-            
-            if (event.key === 'Escape') {
-                document.getElementById('searchSuggestions').classList.add('hidden');
-                closeModal();
+        // --------- Storage listener so search updates when events/tasks are created elsewhere ---------
+        window.addEventListener('storage', function (e) {
+            // if calendarEvents or tasks changed in another tab/window, re-apply filters
+            if (e.key === 'calendarEvents' || e.key === 'tasks') {
+                applyFilters();
             }
         });
 
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set initial view
-            const listBtn = document.querySelector('.view-btn');
-            listBtn.classList.add('active', 'bg-primary', 'text-white');
-            
-            // Set current date for date inputs
+        // --------- Initialization ---------
+        document.addEventListener('DOMContentLoaded', function () {
+            // set dates to today by default
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').value = today;
             document.getElementById('endDate').value = today;
-            
-            // Hide suggestions on click outside
-            document.addEventListener('click', function(event) {
+
+            // initial run
+            applyFilters();
+
+            // hide suggestions on outside click
+            document.addEventListener('click', function (ev) {
                 const suggestions = document.getElementById('searchSuggestions');
                 const searchInput = document.getElementById('searchInput');
-                
-                if (!suggestions.contains(event.target) && event.target !== searchInput) {
+                if (!suggestions.contains(ev.target) && ev.target !== searchInput) {
                     suggestions.classList.add('hidden');
                 }
             });
+
+            // keyboard shortcuts
+            document.addEventListener('keydown', function (e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                    e.preventDefault();
+                    document.getElementById('searchInput').focus();
+                }
+            });
         });
+
+        // small helpers for demo features
+        function loadMoreResults() {
+            showToast('Loading more results...', 'info');
+        }
     </script>
 <script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>

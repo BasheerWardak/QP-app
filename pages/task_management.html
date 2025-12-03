@@ -6,7 +6,7 @@
     <title>Task Management - Super Scheduler</title>
     <link rel="stylesheet" href="../css/main.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+    <script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fsupersche6116back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
 </head>
 <body class="bg-background min-h-screen">
     <!-- Header Navigation -->
@@ -27,9 +27,6 @@
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -53,9 +50,6 @@
                 <div class="flex flex-col space-y-2">
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-primary font-medium px-3 py-2 rounded-md bg-primary-50">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -354,6 +348,32 @@
         let draggedTask = null;
         let tasks = [];
 
+        // ===== Date helpers to avoid off-by-one issues =====
+        function parseDateOnly(str) {
+            if (!str) return null;
+            const parts = str.split('-');
+            if (parts.length !== 3) return null;
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; // 0-based
+            const day = parseInt(parts[2], 10);
+            if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+            return new Date(year, month, day); // local date, no UTC shift
+        }
+
+        function formatDisplayDate(str) {
+            const d = parseDateOnly(str);
+            if (!d) return str || '';
+            return d.toLocaleDateString();
+        }
+
+        function getTodayString() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
         // Local Storage functions
         function saveTasksToStorage() {
             localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -372,10 +392,14 @@
 
         function getTaskStatus(task) {
             if (task.status === 'completed') return 'completed';
-            
+
             const today = new Date();
-            const dueDate = new Date(task.dueDate);
-            
+            today.setHours(0, 0, 0, 0);
+
+            const dueDate = parseDateOnly(task.dueDate);
+            if (!dueDate) return 'pending';
+            dueDate.setHours(0, 0, 0, 0);
+
             if (dueDate < today) return 'overdue';
             return 'pending';
         }
@@ -417,8 +441,7 @@
             
             // Reset form
             event.target.reset();
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('taskDueDate').value = today;
+            document.getElementById('taskDueDate').value = getTodayString();
             
             showToast('Task created successfully!', 'success');
         }
@@ -675,7 +698,9 @@
                         return a.title.localeCompare(b.title);
                     case 'dueDate':
                     default:
-                        return new Date(a.dueDate) - new Date(b.dueDate);
+                        const da = parseDateOnly(a.dueDate) || new Date(0);
+                        const db = parseDateOnly(b.dueDate) || new Date(0);
+                        return da - db;
                 }
             });
             
@@ -750,7 +775,7 @@
                                 <div class="flex items-center space-x-4 text-sm text-text-secondary">
                                     <span class="flex items-center">
                                         <i class="fas fa-calendar-alt mr-1"></i>
-                                        Due: ${new Date(task.dueDate).toLocaleDateString()}
+                                        Due: ${formatDisplayDate(task.dueDate)}
                                     </span>
                                     <span class="flex items-center">
                                         <i class="${categoryIcon} mr-1"></i>
@@ -900,9 +925,8 @@
             renderTasks();
             updateTaskStats();
             
-            // Set default due date to today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('taskDueDate').value = today;
+            // Set default due date to today (local, no UTC shift)
+            document.getElementById('taskDueDate').value = getTodayString();
             
             // Add drag end event listener
             document.addEventListener('dragend', function(event) {
@@ -912,6 +936,5 @@
             });
         });
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>
