@@ -28,9 +28,6 @@
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
                     </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
-                    </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
                     </a>
@@ -53,9 +50,6 @@
                 <div class="flex flex-col space-y-2">
                     <a href="calendar_dashboard.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-calendar-alt mr-2"></i>Dashboard
-                    </a>
-                    <a href="event_creation.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Create Event
                     </a>
                     <a href="task_management.html" class="text-text-secondary hover:text-primary px-3 py-2 rounded-md hover:bg-slate-50 transition-colors">
                         <i class="fas fa-tasks mr-2"></i>Tasks
@@ -412,7 +406,7 @@
                                 <i class="fas fa-tags text-primary mr-3"></i>
                                 Event Categories
                             </h3>
-                            <button onclick="addCategory()" class="btn-primary text-sm">
+                            <button onclick="addCategory()" class="hidden btn-primary text-sm">
                                 <i class="fas fa-plus mr-2"></i>Add Category
                             </button>
                         </div>
@@ -448,7 +442,7 @@
 
                         <div class="space-y-6">
                             <!-- Export Data -->
-                            <div class="p-4 bg-slate-50 rounded-lg">
+                            <div class="hidden p-4 bg-slate-50 rounded-lg">
                                 <h4 class="text-sm font-medium text-text-primary mb-2">Export Calendar Data</h4>
                                 <p class="text-xs text-text-secondary mb-4">Download your calendar data as a backup file</p>
                                 <div class="flex flex-wrap gap-3">
@@ -465,7 +459,7 @@
                             </div>
 
                             <!-- Import Data -->
-                            <div class="p-4 bg-slate-50 rounded-lg">
+                            <div class="hidden p-4 bg-slate-50 rounded-lg">
                                 <h4 class="text-sm font-medium text-text-primary mb-2">Import Calendar Data</h4>
                                 <p class="text-xs text-text-secondary mb-4">Import events from a backup file or other calendar applications</p>
                                 <div class="space-y-3">
@@ -829,9 +823,6 @@
                         <div class="flex items-center space-x-2">
                             <button onclick="editCategory('${category.id}')" class="p-2 text-text-secondary hover:text-primary transition-colors">
                                 <i class="fas fa-edit text-sm"></i>
-                            </button>
-                            <button onclick="deleteCategory('${category.id}')" class="p-2 text-text-secondary hover:text-error transition-colors">
-                                <i class="fas fa-trash text-sm"></i>
                             </button>
                         </div>
                     </div>
